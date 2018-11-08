@@ -79,6 +79,10 @@ Docker, Ansible and Jenkins each have their own respective system users i.e. `do
 Like any other vagrant box, you can easily ssh into devopsubuntu1804 using the default `vagrant ssh` command and make use of any of the other system level users or application level ones as you like.
 
 ### 4.1. Type and list of users and passwords:
+
+Below is table listing the type of users as well as their usernames and passwords:
+
+
 |          User Type           |                  Username                |              Password              |
 |        :-------------       |                  :-------------           |               :-------------       |
 |           System User        |                    vagrant               |                 password           |
