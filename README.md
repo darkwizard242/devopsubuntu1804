@@ -80,7 +80,7 @@ Like any other vagrant box, you can easily ssh into devopsubuntu1804 using the d
 
 ### 4.1. Type and list of users and passwords:
 |          User Type           |                  Username                |              Password              |
-|        :-------------:       |                  :-------------:         |               :-----:              |
+|        :-------------       |                  :-------------         |               :-----              |
 |           System User        |                    vagrant               |                 password           |
 |           System User        |                    root                  |                 password           |
 |           System User        |                    docker                |                 password           |
@@ -88,7 +88,6 @@ Like any other vagrant box, you can easily ssh into devopsubuntu1804 using the d
 |           System User        |                    jenkins               |                 password           |
 |Jenkins Web-Application Console|                    admin                |                 admin              |
 
-### 4.2. Users and permissions:
 **NOTE:** _Though, the passwords for all of the users have been set by default by me so that anyone can use them easily. I would highly recommend to change the passwords of system level users via `root` user using the following commands:_
 
  * `passwd vagrant`
@@ -96,8 +95,11 @@ Like any other vagrant box, you can easily ssh into devopsubuntu1804 using the d
  * `passwd docker`
  * `passwd ansible`
  * `passwd jenkins`
+ 
+### 4.2. Users and permissions:
 
-Additionally, following users have already been added as sudoers with privileges to perform desired operations without supplying passwords:
+
+Following users have already been added as **sudoers** with privileges to perform desired operations without supplying passwords:
 
 ```shell
 root@devopsubuntu1804:~# egrep -w 'ansible|docker|vagrant|jenkins' /etc/sudoers
@@ -108,8 +110,11 @@ jenkins ALL=(ALL) NOPASSWD: ALL
 ```
 
 ### 4.3. Users and home directories:
+
+Following table consists the system users and their `$HOME` directories.
+
 |          User                |            Home Directory                |
-|        :-------------:       |                  :-------------:         |
+|        :-------------       |                  :-------------         |
 |           root               |                    /root                 |
 |           vagrant            |                    /home/vagrant         |
 |           ansible            |                    /home/ansible         |
