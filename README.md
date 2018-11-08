@@ -1,6 +1,6 @@
 
 ## 1. devopsubuntu1804
-`devopsubuntu1804` is a Vagrant VM box with Base image of Ubuntu 18.04 LTS (Bionic) that has a devops tools, programming/scripting languages and environments pre-installed and pre-configured to be ready to be used instantly after boot up.
+`devopsubuntu1804` is a Vagrant VM box with Base image of Ubuntu 18.04 LTS (Bionic) that has DevOps tools, programming/scripting languages and environments pre-installed and pre-configured to be ready to be used instantly after boot up.
 
 `devopsubuntu1804 Releases`: [Vagrant Cloud URL](https://app.vagrantup.com/darkwizard242/boxes/devopsubuntu1804)
 ### Audience
