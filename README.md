@@ -80,7 +80,7 @@ Like any other vagrant box, you can easily ssh into devopsubuntu1804 using the d
 
 ### 4.1. Type and list of users and passwords:
 |          User Type           |                  Username                |              Password              |
-|        :-------------       |                  :-------------         |               :-----              |
+|        :-------------       |                  :-------------           |               :-------------       |
 |           System User        |                    vagrant               |                 password           |
 |           System User        |                    root                  |                 password           |
 |           System User        |                    docker                |                 password           |
@@ -111,7 +111,7 @@ jenkins ALL=(ALL) NOPASSWD: ALL
 
 ### 4.3. Users and home directories:
 
-Following table consists the system users and their `$HOME` directories.
+Following table consists the system **users** and their `$HOME` directories.
 
 |          User                |            Home Directory                |
 |        :-------------       |                  :-------------         |
