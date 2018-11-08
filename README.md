@@ -3,9 +3,14 @@
 `devopsubuntu1804` is a Vagrant VM box with Base image of Ubuntu 18.04 LTS (Bionic) that has DevOps tools, programming/scripting languages and environments pre-installed and pre-configured to be ready to be used instantly after boot up.
 
 `devopsubuntu1804 Releases`: [Vagrant Cloud URL](https://app.vagrantup.com/darkwizard242/boxes/devopsubuntu1804)
-### Audience
-IT professionals, organizations, enthusiasts or learners with a focus or interest towards CI/CD/DevOps.
 
+Supported Provider: **VirtualBox**
+
+#### Audience
+IT professionals, organizations, enthusiasts or learners with a focus or interest towards CI/CD/CM/Containerization/DevOps.
+
+#### Disclaimer:
+It is expected that you have Vagrant and Virtualbox installed on your host machine (whether the host is Windows, Linux or OSX). If not, then please download/install [Vagrant](https://www.vagrantup.com/downloads.html) and [Virtualbox](https://www.virtualbox.org/wiki/Downloads).
 
 ## 2. List of Tools and Languages:
  * _Docker_
@@ -29,6 +34,8 @@ OpenJDK Runtime Environment (build 1.8.0_181-8u181-b13-1ubuntu0.18.04.1-b13)
 OpenJDK 64-Bit Server VM (build 25.181-b13, mixed mode)`
  * _etc.._
  
+All of the tools have been preset to run at boot time using the `init` system, so you don't have to worry about doing that and can instantly get on to working with these awesome tools!
+
 
 ## 3. Virtualizing `devopsubuntu1804` on Vagrant
 This section covers easy to use steps to get started with downloading and virtualizing `devopsubuntu1804` virtual environment.
@@ -79,7 +86,7 @@ Like any other vagrant box, you can easily ssh into devopsubuntu1804 using the d
 |           System User        |                    docker                |                 password           |
 |           System User        |                    ansible               |                 password           |
 |           System User        |                    jenkins               |                 password           |
-|  Jenkins Appliation Console  |                    admin                 |                 admin              |
+|Jenkins Web-Application Console|                    admin                |                 admin              |
 
 ### 4.2. Users and permissions:
 **NOTE:** _Though, the passwords for all of the users have been set by default by me so that anyone can use them easily. I would highly recommend to change the passwords of system level users via `root` user using the following commands:_
