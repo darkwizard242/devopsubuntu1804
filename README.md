@@ -93,15 +93,6 @@ Below is table listing the type of users as well as their usernames and password
 |Jenkins Web-Application Console|                    admin                |                 admin              |
 
 
-User Type | Username | Password
------------- | ------------- | -------------
-System User | vagrant | password
-System User | root | password
-System User | docker | password
-System User | ansible | password
-System User | jenkins | password
-Jenkins Web-Application Console | admin | admin
-
 **NOTE:** _Though, the passwords for all of the users have been set by default by me so that anyone can use them easily. I would highly recommend to change the passwords of system level users via `root` user using the following commands:_
 
  * `passwd vagrant`
