@@ -24,9 +24,7 @@ It is expected that you have Vagrant and Virtualbox installed on your host machi
  * _Python_
     * `Python 2.7.15rc1`
  * _Java_
-    * `openjdk version "1.8.0_181"
-OpenJDK Runtime Environment (build 1.8.0_181-8u181-b13-1ubuntu0.18.04.1-b13)
-OpenJDK 64-Bit Server VM (build 25.181-b13, mixed mode)`
+    * `openjdk version "1.8.0_181"`
  * _etc.._
  
 All of the tools have been preset to run at boot time using the `init` system, so you don't have to worry about doing that and can instantly get on to working with these awesome tools!
