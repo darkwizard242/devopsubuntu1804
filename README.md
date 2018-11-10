@@ -119,3 +119,9 @@ Following table consists the system **users** and their `$HOME` directories.
 |           docker             |                    /home/docker          |
 |           jenkins            |                    /var/lib/jenkins      |
 
+## 5. Acknowledgements:
+ * [Vagrant](https://www.vagrantup.com/)
+ * [Ubuntu](https://www.ubuntu.com/)
+
+## 6. Authors:
+ * [Ali Muhammad](https://www.linkedin.com/in/ali-muhammad-759791130/)
