@@ -13,4 +13,4 @@ apt-get update -y
 sudo apt-get install linux-headers-$(uname -r) build-essential dkms nfs-common -y
 
 # Install necessary dependencies
-sudo apt-get install curl wget git tmux xvfb vim -y
+sudo apt-get install curl wget tmux xvfb vim -y

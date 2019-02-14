@@ -65,9 +65,11 @@
         {
             "type": "shell",
             "scripts": [
-                "mods/init.sh",
-                "mods/cleanup.sh",
-                "mods/vagrant_init.sh"
+                "mods/1-init.sh",
+                "mods/2-vagrant_init.sh",
+                "mods/3-install_git.sh",
+                "mods/4-install_python3_pip.sh",
+                "mods/cleanup.sh"
             ],
             "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
         }
