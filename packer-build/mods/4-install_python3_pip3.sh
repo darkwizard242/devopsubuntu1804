@@ -1,4 +1,4 @@
-#/bin/bash
+#/bin/bash -eux
 
 packages="python3 python3-pip"
 
