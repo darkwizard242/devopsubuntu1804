@@ -72,6 +72,7 @@
                 "mods/5-install_ansible.sh",
                 "mods/6-install_java.sh",
                 "mods/7-install_jenkins.sh",
+                "mods/8-install_terraform.sh",
                 "mods/cleanup.sh"
             ],
             "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
