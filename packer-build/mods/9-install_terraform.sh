@@ -17,7 +17,7 @@ do
 done
 
 
-## Download terraform and extract binary to /bin/
+## Download Terraform and extract binary to /bin/
 binary="terraform"
 version="0.11.11"
 osarch="linux_amd64"

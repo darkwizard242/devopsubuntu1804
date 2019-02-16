@@ -17,7 +17,7 @@ do
 done
 
 ## Adding apt repository for ansible
-apt-add-repository ppa:ansible/ansible -y
+
 
 
 ## Installing ansible
@@ -27,6 +27,8 @@ if [ $? -eq 0 ];
   then
     echo "$package is already available and installed within the system." && echo -e
   else
+    apt-add-repository ppa:ansible/ansible -y
+    apt-get update -y
     echo "About to install $package." && echo -e
     apt-get install $package -y
 fi

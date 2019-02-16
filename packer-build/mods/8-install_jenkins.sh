@@ -13,11 +13,12 @@ else
   wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
   sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
   apt-get install $package -y
+  systemctl enable $package && systemctl start $package
 fi
 
 
 ## Check service status of jenkins
-systemctl status jenkins --no-pager -l
+systemctl status $package --no-pager -l
 if [ $? -eq 0 ];
 then
   echo -e && echo "$package is UP & Running"

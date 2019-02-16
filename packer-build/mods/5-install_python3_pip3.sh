@@ -1,5 +1,6 @@
 #/bin/bash -eux
 
+## Install python3 and python3-pip
 packages="python3 python3-pip"
 
 for package in $packages;

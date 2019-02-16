@@ -67,12 +67,14 @@
             "scripts": [
                 "mods/1-init.sh",
                 "mods/2-vagrant_init.sh",
-                "mods/3-install_git.sh",
-                "mods/4-install_python3_pip3.sh",
-                "mods/5-install_ansible.sh",
-                "mods/6-install_java.sh",
-                "mods/7-install_jenkins.sh",
-                "mods/8-install_terraform.sh",
+                "mods/3-groups-users-creation.sh",
+                "mods/4-install_git.sh",
+                "mods/5-install_python3_pip3.sh",
+                "mods/6-install_ansible.sh",
+                "mods/7-install_java.sh",
+                "mods/8-install_jenkins.sh",
+                "mods/9-install_terraform.sh",
+                "mods/10-install_docker.sh",
                 "mods/cleanup.sh"
             ],
             "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
