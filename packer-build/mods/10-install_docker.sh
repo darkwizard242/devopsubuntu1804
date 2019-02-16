@@ -29,7 +29,7 @@ if [ $? -eq 0 ];
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
     apt-get update -y
     apt-get install $package -y
-    systemctl enable $package && systemctl start $package
+    systemctl enable docker && systemctl start docker
 fi
 
 
