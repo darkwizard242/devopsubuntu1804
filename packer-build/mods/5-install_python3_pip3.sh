@@ -11,6 +11,6 @@ do
       echo "$package is already available and installed within the system" && echo -e
     else
       echo "About to install $package" && echo -e
-      apt-get install $package -y
+      DEBIAN_FRONTEND=non-interactive apt-get install $package -y
   fi
 done

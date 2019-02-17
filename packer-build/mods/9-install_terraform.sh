@@ -12,7 +12,7 @@ do
       echo "$dependency is already available and installed within the system." && echo -e
     else
       echo "About to install $dependency." && echo -e
-      apt-get install $dependency -y
+      DEBIAN_FRONTEND=non-interactive apt-get install $dependency -y
   fi
 done
 

@@ -12,7 +12,7 @@ do
       echo "$dependency is already available and installed within the system." && echo -e
     else
       echo "About to install $dependency." && echo -e
-      apt-get install $dependency -y
+      DEBIAN_FRONTEND=non-interactive apt-get install $dependency -y
   fi
 done
 
@@ -28,9 +28,9 @@ if [ $? -eq 0 ];
     echo "$package is already available and installed within the system." && echo -e
   else
     apt-add-repository ppa:ansible/ansible -y
-    apt-get update -y
+    DEBIAN_FRONTEND=non-interactive apt-get update -y
     echo "About to install $package." && echo -e
-    apt-get install $package -y
+    DEBIAN_FRONTEND=non-interactive apt-get install $package -y
 fi
 
 

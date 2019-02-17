@@ -12,7 +12,7 @@ do
       echo "$dependency is already available and installed within the system." && echo -e
     else
       echo "About to install $dependency." && echo -e
-      apt-get install $dependency -y
+      DEBIAN_FRONTEND=non-interactive apt-get install $dependency -y
   fi
 done
 
@@ -27,8 +27,8 @@ if [ $? -eq 0 ];
     echo "About to install $package." && echo -e
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-    apt-get update -y
-    apt-get install $package -y
+    DEBIAN_FRONTEND=non-interactive apt-get update -y
+    DEBIAN_FRONTEND=non-interactive apt-get install $package -y
     systemctl enable docker && systemctl start docker
 fi
 

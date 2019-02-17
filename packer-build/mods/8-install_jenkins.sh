@@ -12,7 +12,8 @@ else
   echo "About to install $package" && echo -e
   wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
   sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
-  apt-get install $package -y
+  DEBIAN_FRONTEND=non-interactive apt-get update -y
+  DEBIAN_FRONTEND=non-interactive apt-get install $package -y
   systemctl enable $package && systemctl start $package
 fi
 
