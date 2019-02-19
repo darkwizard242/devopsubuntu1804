@@ -13,7 +13,7 @@ underline='\033[4m'
 fqdn=`hostname -f`
 ip=`hostname -I | awk '{ print $1 }'`
 running_procs=`ps aux | wc -l`
-cur_user=`whoami`
+# cur_user=`whoami`
 cur_time=`date | awk '{ print $4,$5 }'`
 cur_date=`date | awk '{ print $3,$2,$6 }'`
 bash_ver=`bash --version | awk 'NR==1 { print $4}'`
@@ -34,7 +34,7 @@ echo -e "$lightred CPU type: $lightgreen$cpu_info"
 echo -e "$lightred Memory Usage: $lightgreen$mem_stats"
 echo -e "$lightred Running processes: $lightgreen$running_procs"
 echo -e "$lightred Installed packages: $lightgreen$total_packages"
-echo -e "$lightred Current User: $lightgreen$cur_user"
+# echo -e "$lightred Current User: $lightgreen$cur_user"
 echo -e "$lightred Current Time: $lightgreen$cur_time"
 echo -e "$lightred Current Date: $lightgreen$cur_date"
 echo -e "$lightred Up Since: $lightgreen$total_uptime\n $no_color"
@@ -43,9 +43,8 @@ echo -e "$lightred Up Since: $lightgreen$total_uptime\n $no_color"
 # DevOps variables/values set up.
 jenkins_ver=`java -jar /usr/share/jenkins/jenkins.war --version`
 terraform_ver=`terraform --version | awk 'NR==1 { print $2 }'`
-ansible_ver=`ansible --version | awk 'NR==1 { print $2}'`
+ansible_ver=`sudo ansible --version | awk 'NR==1 { print $2}'`
 docker_ver=`docker --version | awk '{ print $3,$4,$5}'`
-
 python3_ver=`python3 --version | awk '{ print $2 }'`
 git_ver=`git --version | awk '{ print $3 }'`
 
@@ -59,10 +58,10 @@ echo -e "$lightred Git Version:\t\t $lightgreen$git_ver\n $no_color"
 
 # Maintainer/creater support info
 
-e-mail="am900820@gmail.com"
+email="am900820@gmail.com"
 github_url=https://github.com/Tech-Overlord/devopsubuntu1804
 
 echo -e "\n\t $bold$underline Maintainer's Information: $normal \n"
 echo -e "$lightred Name:\t\t $lightgreen Ali Muhammad"
 echo -e "$lightred GitHub URL:\t $lightgreen$github_url"
-echo -e "$lightred E-mail:\t $lightgreen$e-mail\n $no_color"
+echo -e "$lightred E-mail:\t $lightgreen$email\n $no_color"
