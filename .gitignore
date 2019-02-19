@@ -1,6 +1,7 @@
 
 packer-build/output*
 packer-build/packer_cache
+packer-build/vagrant*
 *.gem
 *.rbc
 /.config

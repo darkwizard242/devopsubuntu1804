@@ -13,4 +13,11 @@ DEBIAN_FRONTEND=non-interactive apt-get update -y
 DEBIAN_FRONTEND=non-interactive apt-get install linux-headers-$(uname -r) build-essential dkms nfs-common -y
 
 # Install necessary dependencies
-DEBIAN_FRONTEND=non-interactive apt-get install curl wget tmux xvfb vim -y
+DEBIAN_FRONTEND=non-interactive apt-get install curl wget tmux xvfb vim inxi screenfetch -y
+
+# Disable all current motd's and only use custom motd.
+ls -altr /home/vagrant/
+chmod -x /etc/update-motd.d/*
+cp -R /home/vagrant/00-custom_motd /etc/update-motd.d/ && ls -altr /etc/update-motd.d/
+chown -R root:root /etc/update-motd.d/00-custom_motd
+chmod +x /etc/update-motd.d/00-custom_motd

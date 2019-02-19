@@ -28,9 +28,9 @@
                 "<enter><wait>"
             ],
             "boot_wait": "10s",
-            "disk_size": 81920,
+            "disk_size": 40960,
             "guest_os_type": "Ubuntu_64",
-            "headless": false,
+            "headless": true,
             "http_directory": "http",
             "iso_urls": [
                 "http://cdimage.ubuntu.com/releases/18.04.1/release/ubuntu-18.04.1-server-amd64.iso"
@@ -46,38 +46,33 @@
             "virtualbox_version_file": ".vbox_version",
             "vm_name": "devopsubuntu1804",
             "vboxmanage": [
-            [
-                "modifyvm",
-                "{{.Name}}",
-                "--memory",
-                "1024"
-            ],
-            [
-                "modifyvm",
-                "{{.Name}}",
-                "--cpus",
-                "1"
-            ]
+            ["modifyvm", "{{.Name}}", "--memory", "1024"],
+            ["modifyvm", "{{.Name}}", "--cpus", "1"]
             ]
         }
     ],
     "provisioners": [
         {
+            "type": "file",
+            "source": "mods/00-custom_motd",
+            "destination": "/home/vagrant/"
+        },
+        {
             "type": "shell",
+            "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
             "scripts": [
-                "mods/1-init.sh",
-                "mods/2-vagrant_init.sh",
-                "mods/3-groups-users-creation.sh",
-                "mods/4-install_git.sh",
-                "mods/5-install_python3_pip3.sh",
-                "mods/6-install_ansible.sh",
-                "mods/7-install_java.sh",
-                "mods/8-install_jenkins.sh",
-                "mods/9-install_terraform.sh",
+                "mods/01-init.sh",
+                "mods/02-vagrant_init.sh",
+                "mods/03-groups-users-creation.sh",
+                "mods/04-install_git.sh",
+                "mods/05-install_python3_pip3.sh",
+                "mods/06-install_ansible.sh",
+                "mods/07-install_java.sh",
+                "mods/08-install_jenkins.sh",
+                "mods/09-install_terraform.sh",
                 "mods/10-install_docker.sh",
                 "mods/cleanup.sh"
-            ],
-            "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
+            ]
         }
     ],
     "post-processors": [{
