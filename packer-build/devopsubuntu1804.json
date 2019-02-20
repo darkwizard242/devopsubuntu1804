@@ -71,6 +71,8 @@
                 "mods/08-install_jenkins.sh",
                 "mods/09-install_terraform.sh",
                 "mods/10-install_docker.sh",
+                "mods/11-install_awscli.sh",
+                "mods/12-install_subversion.sh",
                 "mods/cleanup.sh"
             ]
         }

@@ -1,4 +1,4 @@
-#/bin/bash -eux
+#!/bin/bash -eux
 
 ## Install python3 and python3-pip
 packages="python3 python3-pip"
@@ -14,3 +14,4 @@ do
       DEBIAN_FRONTEND=non-interactive apt-get install $package -y
   fi
 done
+

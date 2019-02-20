@@ -1,4 +1,4 @@
-#/bin/bash -eux
+#!/bin/bash -eux
 
 packages="openjdk-8-jdk"
 

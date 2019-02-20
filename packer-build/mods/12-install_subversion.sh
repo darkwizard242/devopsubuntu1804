@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/bin/bash -eux
 
-packages="git"
+## Install python3 and python3-pip
+packages="subversion"
 
 for package in $packages;
 do
@@ -13,3 +14,4 @@ do
       DEBIAN_FRONTEND=non-interactive apt-get install $package -y
   fi
 done
+
