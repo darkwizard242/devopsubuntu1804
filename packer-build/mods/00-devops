@@ -47,6 +47,7 @@ ansible_ver=`sudo ansible --version | awk 'NR==1 { print $2}'`
 docker_ver=`docker --version | awk '{ print $3,$4,$5}'`
 awscli_ver=`aws --version`
 python3_ver=`python3 --version | awk '{ print $2 }'`
+pip3_ver=`python3 -m pip --version | awk '{ print $2 }'`
 git_ver=`git --version | awk '{ print $3 }'`
 svn_ver=`svn --version | awk 'NR==1 { print $3,$4 }'`
 
@@ -57,6 +58,7 @@ echo -e "$lightred Ansible Version:\t $lightgreen$ansible_ver"
 echo -e "$lightred Docker Version:\t $lightgreen$docker_ver"
 echo -e "$lightred AWS-CLI Version:\t $lightgreen$awscli_ver"
 echo -e "$lightred Python3 Version:\t $lightgreen$python3_ver"
+echo -e "$lightred Python3-pip Version:\t $lightgreen$pip_ver"
 echo -e "$lightred Git Version:\t\t $lightgreen$git_ver"
 echo -e "$lightred SVN Version:\t\t $lightgreen$svn_ver\n $no_color"
 

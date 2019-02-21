@@ -15,3 +15,14 @@ do
   fi
 done
 
+
+## Upgrade pip for python3
+pip3_ver=`python3 -m pip --version`
+if [ $? -eg 0 ];
+then
+  echo "pip for python3 is installed and is: $pip3_ver . Going to upgrade it (if candidate is available)." 
+  python3 -m pip install -U pip
+else
+  echo "pip for python3 is not available."
+fi
+
