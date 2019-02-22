@@ -58,7 +58,7 @@ echo -e "$lightred Ansible Version:\t $lightgreen$ansible_ver"
 echo -e "$lightred Docker Version:\t $lightgreen$docker_ver"
 echo -e "$lightred AWS-CLI Version:\t $lightgreen$awscli_ver"
 echo -e "$lightred Python3 Version:\t $lightgreen$python3_ver"
-echo -e "$lightred Python3-pip Version:\t $lightgreen$pip_ver"
+echo -e "$lightred Python3-pip Version:\t $lightgreen$pip3_ver"
 echo -e "$lightred Git Version:\t\t $lightgreen$git_ver"
 echo -e "$lightred SVN Version:\t\t $lightgreen$svn_ver\n $no_color"
 
