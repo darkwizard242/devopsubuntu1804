@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-## Check if desired motd file exists.
+## Check sudoers ownership, perms, file exists, contents.
 describe file('/etc/sudoers') do
   it { should exist }
   it { should be_file }
@@ -12,6 +12,12 @@ describe file('/etc/sudoers') do
   it { should contain 'docker        ALL=(ALL)       NOPASSWD: ALL' }
 end
 
+## Check for file to disable unattended updates - ownership, perms, file exists, contents.
+describe file('/etc/apt/apt.conf.d/10periodic') do
+  it { should exist }
+  it { should be_file }
+  it { should be_owned_by 'root' }
+end
 
 ## Check whether the packages in 01-init.sh are available in the system
 describe package('build-essential') do
