@@ -26,3 +26,7 @@ then
 else
   echo -e && echo "Service status for $package returned an error"
 fi
+
+echo -e "Adding user: jenkins to sudo group." && usermod -aG sudo jenkins
+echo -e "Adding user: jenkins to docker group." && usermod -aG docker jenkins
+echo -e

@@ -16,7 +16,7 @@ do
 done
 
 ## Create users.
-listOfUsers="docker jenkins ansible"
+listOfUsers="docker ansible"
 for username in $listOfUsers;
 do
   id $username &> /dev/null && echo -e
