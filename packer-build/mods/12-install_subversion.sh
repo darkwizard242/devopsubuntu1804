@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 
-## Install python3 and python3-pip
+## Install subversion
 packages="subversion"
 
 for package in $packages;
