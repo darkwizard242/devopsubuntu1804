@@ -1,10 +1,10 @@
 #!/bin/bash -eux
 
 # Add vagrant user to sudoers.
-echo "vagrant        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
-echo "ansible        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
-echo "jenkins        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
-echo "docker       ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
+echo "vagrant ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+echo "ansible ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+echo "docker ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
 
 # Disable daily apt unattended updates.
