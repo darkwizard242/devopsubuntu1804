@@ -16,13 +16,9 @@ describe port(8080), :if => os[:family] == 'ubuntu' do
   it { should be_listening }
 end
 
-## Check if the jenkins directory exists.
+## Check if the jenkins directory exists and it's ownership.
 describe file('/var/lib/jenkins'), :if => os[:family] == 'ubuntu' do
   it { should be_directory }
-end
-
-## Check if jenkins directory is owned by user jenkins.
-describe file('/var/lib/jenkins'), :if => os[:family] == 'ubuntu' do
   it { should be_owned_by 'jenkins' }
 end
 
