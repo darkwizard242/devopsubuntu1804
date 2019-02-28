@@ -6,10 +6,10 @@ describe file('/etc/sudoers') do
   it { should be_file }
   it { should be_owned_by 'root' }
   it { should be_readable.by_user('root') }
-  it { should contain 'vagrant        ALL=(ALL)       NOPASSWD: ALL' }
-  it { should contain 'ansible        ALL=(ALL)       NOPASSWD: ALL' }
-  it { should contain 'jenkins        ALL=(ALL)       NOPASSWD: ALL' }
-  it { should contain 'docker        ALL=(ALL)       NOPASSWD: ALL' }
+  it { should contain 'vagrant ALL=(ALL) NOPASSWD: ALL' }
+  it { should contain 'ansible ALL=(ALL) NOPASSWD: ALL' }
+  it { should contain 'jenkins ALL=(ALL) NOPASSWD: ALL' }
+  it { should contain 'docker ALL=(ALL) NOPASSWD: ALL' }
 end
 
 ## Check for file to disable unattended updates - ownership, perms, file exists, contents.
