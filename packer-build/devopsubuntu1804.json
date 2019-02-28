@@ -85,6 +85,7 @@
             "type": "shell",
             "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
             "scripts": [
+                "mods/init_serverspec_tests.sh",
                 "mods/cleanup.sh"
             ]
         }
