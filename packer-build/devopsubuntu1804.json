@@ -73,7 +73,18 @@
                 "mods/10-install_docker.sh",
                 "mods/11-install_awscli.sh",
                 "mods/12-install_subversion.sh",
-                "mods/13-install_ruby.sh",
+                "mods/13-install_ruby.sh"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "serverspec-tests",
+            "destination": "/home/vagrant/"
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+            "scripts": [
                 "mods/cleanup.sh"
             ]
         }
