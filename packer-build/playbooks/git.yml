@@ -1,0 +1,12 @@
+- hosts: local
+  tasks:
+  - name: Update Repository cache
+    apt:
+      update_cache: yes
+  - name: Install Git
+    apt:
+      name: git
+      state: latest
+      force_apt_get: yes
+      autoclean: yes
+      autoremove: yes
