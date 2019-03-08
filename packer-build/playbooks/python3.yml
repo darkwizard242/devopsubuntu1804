@@ -1,0 +1,12 @@
+- hosts: local
+  tasks:
+  - name: Update Repository cache
+    apt:
+      update_cache: yes
+  - name: Install Python3
+    apt:
+      name: python3
+      state: latest
+      force_apt_get: yes
+      autoclean: yes
+      autoremove: yes
