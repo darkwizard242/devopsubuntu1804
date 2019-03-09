@@ -1,0 +1,15 @@
+- hosts: local
+  tasks:
+  - name: Install awscli using pip3
+    pip:
+      name: awscli
+      state: latest
+      executable: pip3
+  - name: Check AWSCLI version
+    shell: aws --version
+    args:
+      executable: /bin/bash
+    register: awscli_version
+  - name: Print AWSCLI version
+    debug:
+      var: awscli_version.stdout
