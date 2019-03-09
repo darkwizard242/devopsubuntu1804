@@ -1,0 +1,12 @@
+- hosts: local
+  tasks:
+  - name: Update Repository cache
+    apt:
+      update_cache: yes
+  - name: Install OpenJDK8
+    apt:
+      name: openjdk-8-jdk
+      state: latest
+      force_apt_get: yes
+      autoclean: yes
+      autoremove: yes
