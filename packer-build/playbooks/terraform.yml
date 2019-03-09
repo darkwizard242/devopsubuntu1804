@@ -1,0 +1,38 @@
+- hosts: local
+  vars:
+    app: terraform
+    version: 0.11.12
+    osarch: linux_amd64
+    dl_loc: /tmp
+    bin_path: /bin/
+  tasks:
+  - name: Update Repository cache
+    apt:
+      update_cache: yes
+  - name: Install unzip
+    apt:
+      name: unzip
+      state: latest
+      force_apt_get: yes
+      autoclean: yes
+      autoremove: yes
+  - name: Download Terraform archive
+    get_url: 
+      url: https://releases.hashicorp.com/{{ app }}/{{ version }}/{{ app }}_{{ version }}_{{ osarch }}.zip
+      dest: "{{ dl_loc }}"
+  - name: Unarchive Terraform and place in /bin/
+    unarchive:
+      src: "{{ dl_loc }}/{{ app }}_{{ version }}_{{ osarch }}.zip"
+      dest: "{{ bin_path }}"
+  - name: Remove Terraform archive file.
+    file:
+      path: "{{ dl_loc }}/{{ app }}_{{ version }}_{{ osarch }}.zip"
+      state: absent
+  - name: Check Terraform version
+    shell: "{{ app }} --version"
+    args:
+      executable: /bin/bash
+    register: terraform_version
+  - name: Print Terraform version
+    debug:
+      var: terraform_version.stdout
