@@ -1,0 +1,75 @@
+- hosts: local
+  vars:
+    dependencies:
+    - apt-transport-https
+    - ca-certificates
+    - curl 
+    - software-properties-common
+    users_for_docker_group:
+    - ansible
+    - jenkins
+  tasks:
+  - name: Update Repository cache - PRE addition of Docker Repo
+    apt:
+      update_cache: yes
+  - name: Install dependencies of Docker
+    apt:
+      name: "{{ dependencies }}"
+      state: latest
+      force_apt_get: yes
+      autoclean: yes
+      autoremove: yes
+  - name: Add Docker Key
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+  - name: Add Docker Repository
+    apt_repository:
+      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+      state: present
+      filename: docker
+  - name: Update Repository cache - POST addition of Docker Repo
+    apt:
+      update_cache: yes
+  - name: Install Docker
+    apt:
+      name: docker-ce
+      state: latest
+      force_apt_get: yes
+      autoclean: yes
+      autoremove: yes
+    notify:
+      - enable_docker_service
+      - start_docker_service
+  - name: Add user docker to 'sudo' group
+    user:
+      name: docker
+      groups: sudo
+      append: yes
+  - name: Add ansible to 'docker' group
+    user:
+      name: ansible
+      groups: docker
+      append: yes
+  - name: Add jenkins to 'docker' group
+    user:
+      name: jenkins
+      groups: docker
+      append: yes
+  - name: Check Docker version
+    shell: docker --version
+    args:
+      executable: /bin/bash
+    register: docker_version
+  - name: Print Docker version
+    debug:
+      var: docker_version.stdout
+  handlers:
+  - name: enable_docker_service
+    systemd:
+      name: docker
+      enabled: yes
+  - name: start_docker_service
+    systemd:
+      name: docker
+      state: started
