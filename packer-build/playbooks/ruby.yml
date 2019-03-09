@@ -1,0 +1,20 @@
+- hosts: local
+  tasks:
+  - name: Update Repository cache
+    apt:
+      update_cache: yes
+  - name: Install Ruby
+    apt:
+      name: ruby
+      state: latest
+      force_apt_get: yes
+      autoclean: yes
+      autoremove: yes
+  - name: Check ruby version
+    shell: ruby --version
+    args:
+      executable: /bin/bash
+    register: ruby_version
+  - name: Print Ruby's version
+    debug:
+      var: ruby_version.stdout
