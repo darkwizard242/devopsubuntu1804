@@ -1,0 +1,20 @@
+- hosts: local
+  tasks:
+  - name: Update Repository cache
+    apt:
+      update_cache: yes
+  - name: Install Subversion
+    apt:
+      name: subversion
+      state: latest
+      force_apt_get: yes
+      autoclean: yes
+      autoremove: yes
+  - name: Check Subversion version
+    shell: svn --version
+    args:
+      executable: /bin/bash
+    register: svn_version
+  - name: Print Subversion's version
+    debug:
+      var: svn_version.stdout
