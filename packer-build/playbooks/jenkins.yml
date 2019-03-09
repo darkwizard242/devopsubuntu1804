@@ -1,0 +1,50 @@
+- hosts: local
+  gather_facts: no
+  tasks:
+  - name: Update Repository cache - PRE addition of Jenkins Repo
+    apt:
+      update_cache: yes
+  - name: Add Jenkins Key
+    apt_key:
+      url: https://pkg.jenkins.io/debian/jenkins.io.key
+      state: present
+  - name: Add Jenkins Repository
+    apt_repository:
+      repo: deb http://pkg.jenkins.io/debian-stable binary/
+      state: present
+      filename: jenkins
+  - name: Update Repository cache - POST addition of Jenkins Repo
+    apt:
+      update_cache: yes
+  - name: Install Jenkins
+    apt:
+      name: jenkins
+      state: latest
+      force_apt_get: yes
+      autoclean: yes
+      autoremove: yes
+    notify:
+      - enable_jenkins_service
+      - start_jenkins_service
+  - name: Add user jenkins to 'sudo' and 'docker' group
+    user:
+      name: jenkins
+      groups: sudo,docker
+      append: yes
+  - name: fetch_jenkins_admin_password
+    shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+    args:
+      executable: /bin/bash
+    register: jenkins_admin_password_is
+  - name: print_jenkins_admin_password
+    debug:
+      var: jenkins_admin_password_is.stdout
+  handlers:
+  - name: enable_jenkins_service
+    systemd:
+      name: jenkins
+      enabled: yes
+  - name: start_jenkins_service
+    systemd:
+      name: jenkins
+      state: started
