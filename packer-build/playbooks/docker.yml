@@ -1,4 +1,6 @@
 - hosts: local
+  become: yes
+  gather_facts: no
   vars:
     dependencies:
     - apt-transport-https
