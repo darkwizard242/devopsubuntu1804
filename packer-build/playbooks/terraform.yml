@@ -1,4 +1,6 @@
 - hosts: local
+  become: yes
+  gather_facts: no
   vars:
     app: terraform
     version: 0.11.12
