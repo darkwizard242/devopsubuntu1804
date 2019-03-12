@@ -7,6 +7,10 @@ echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 echo "docker ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
 
+# Add vagrant user to sudo group
+usermod -aG sudo vagrant
+
+
 # Disable daily apt unattended updates.
 echo 'APT::Periodic::Enable "0";' >> /etc/apt/apt.conf.d/10periodic
 
