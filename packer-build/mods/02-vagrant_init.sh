@@ -18,3 +18,9 @@ sh /mnt/virtualbox/VBoxLinuxAdditions.run
 ln -s /opt/VBoxGuestAdditions-*/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions
 umount /mnt/virtualbox
 rm -rf /home/vagrant/VBoxGuest*.iso
+
+cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
+
+mkdir -p /home/vagrant/.ansible/tmp
+chown -R vagrant:vagrant /home/vagrant/.ansible/tmp
+chmod -R 777 /home/vagrant/.ansible/tmp
