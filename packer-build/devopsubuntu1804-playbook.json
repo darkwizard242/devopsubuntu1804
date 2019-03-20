@@ -72,7 +72,22 @@
             "staging_directory": "/home/vagrant/playbooks",
             "playbook_files": [
                 "playbooks/git.yml",
-                "playbooks/python3.yml"
+                "playbooks/python3.yml",
+                "playbooks/python3-pip.yml",
+                "playbooks/java.yml",
+                "playbooks/jenkins.yml",
+                "playbooks/terraform.yml",
+                "playbooks/docker.yml",
+                "playbooks/awscli.yml",
+                "playbooks/subversion.yml",
+                "playbooks/ruby.yml"
+            ]
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+            "scripts": [
+                "mods/cleanup.sh"
             ]
         }
     ],
