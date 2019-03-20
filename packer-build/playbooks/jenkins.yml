@@ -25,14 +25,12 @@
       force_apt_get: yes
       autoclean: yes
       autoremove: yes
+  - name: Wait for adminpassword file - Confirming jenkins is installed
+    wait_for:
+      path: /var/lib/jenkins/secrets/initialAdminPassword
     notify:
       - enable_jenkins_service
       - start_jenkins_service
-  - name: Add user jenkins to 'sudo' and 'docker' group
-    user:
-      name: jenkins
-      groups: sudo,docker
-      append: yes
   - name: fetch_jenkins_admin_password
     shell: cat /var/lib/jenkins/secrets/initialAdminPassword
     args:
@@ -41,6 +39,11 @@
   - name: print_jenkins_admin_password
     debug:
       var: jenkins_admin_password_is.stdout
+  - name: Add user jenkins to 'sudo' and 'docker' group
+    user:
+      name: jenkins
+      groups: sudo,docker
+      append: yes
   handlers:
   - name: enable_jenkins_service
     systemd:
