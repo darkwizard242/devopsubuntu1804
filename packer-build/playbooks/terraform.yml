@@ -4,7 +4,7 @@
   gather_facts: no
   vars:
     app: terraform
-    version: 0.11.12
+    version: 0.11.13
     osarch: linux_amd64
     dl_loc: /tmp
     bin_path: /bin/
