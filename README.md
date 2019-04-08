@@ -1,6 +1,6 @@
 
 ## 1. devopsubuntu1804
-`devopsubuntu1804` is a Vagrant VM box with Base image of Ubuntu 18.04 LTS (Bionic) that has DevOps tools, programming/scripting languages and environments pre-installed and pre-configured to be ready to be used instantly after boot up.
+`devopsubuntu1804` is a Vagrant VM box with underlying base image of Ubuntu 18.04 LTS (bionic). It is created using [Hashicorp Packer](https://www.packer.io/) and is provisioned with multiple DevOps tools, programming/scripting languages and environments pre-installed and pre-configured to be ready to be used instantly after boot up.
 
 `devopsubuntu1804 Releases`: [Vagrant Cloud URL](https://app.vagrantup.com/darkwizard242/boxes/devopsubuntu1804)
 
@@ -17,14 +17,27 @@ It is expected that you have Vagrant and Virtualbox installed on your host machi
     * `Docker version 18.06.1-ce, build e68fc7a`
  * _Ansible_
     * `ansible 2.7.1`
+ * _Terraform_
+    * `terraform x.x.x`
  * _Jenkins_
     * `Jenkins ver. 2.138.2`
  * _Git_
     * `git version 2.17.1`
+ * _Subversion_
+    * `subversion x.x.x`
+ * _AWS-CLI_
+    * `awscli x.x.x`
  * _Python_
     * `Python 2.7.15rc1`
+    * `Python 3.x.x`
+ * _Pip3_
+    * `pip x.x.x`
  * _Java_
     * `openjdk version "1.8.0_181"`
+ * _Ruby_
+    * `ruby x.x.x`
+  * _ServerSpec_
+    * `serverspec x.x.x`
  * _etc.._
  
 All of the tools have been preset to run at boot time using the `init` system, so you don't have to worry about doing that and can instantly get on to working with these awesome tools!
@@ -119,9 +132,22 @@ Following table consists the system **users** and their `$HOME` directories.
 |           docker             |                    /home/docker          |
 |           jenkins            |                    /var/lib/jenkins      |
 
-## 5. Acknowledgements:
+
+## 5. `devopsubuntu1804` Build:
+Vagrant box `devopsubuntu1804` can be built using Packer. Pre-requisites include Virtualbox as that is the builder being used for the packer build.
+
+Assuming that Virtualbox and Packer are installed on the host system with internet accessibility, you can build `devopsubuntu1804` yourself using the following steps:
+
+1. Downloading **devopsubuntu1804** source code archive: `curl -Lo devopsubuntu1804.zip https://github.com/darkwizard242/devopsubuntu1804/archive/master.zip`
+1. Extracting **devopsubuntu1804** source code archive: `unzip devopsubuntu1804.zip -d devopsubuntu1804`
+1. Changing to packer build directory: `cd devopsubuntu1804/devopsubuntu1804-master/`
+1. Running Packer build: `packer build devopsubuntu1804.json`
+
+
+## Acknowledgements:
+ * [Packer](https://www.packer.io/)
  * [Vagrant](https://www.vagrantup.com/)
  * [Ubuntu](https://www.ubuntu.com/)
 
-## 6. Authors:
+## Authors:
  * [Ali Muhammad](https://www.linkedin.com/in/ali-muhammad-759791130/)
