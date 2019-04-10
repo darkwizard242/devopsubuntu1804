@@ -19,7 +19,7 @@ done
 
 ## Download Terraform and extract binary to /bin/
 binary="terraform"
-version="0.11.11"
+version="0.11.13"
 osarch="linux_amd64"
 if [ -e /bin/terraform ]
 then
@@ -27,7 +27,7 @@ then
   echo "Terraform binary currently exists in /bin/ !"
   echo "Currently available version is: $ver_existing"
 else
-  wget https://releases.hashicorp.com/${binary}/${version}/${binary}_${version}_${osarch}.zip
+  wget -v https://releases.hashicorp.com/${binary}/${version}/${binary}_${version}_${osarch}.zip
   unzip ${binary}_${version}_${osarch}.zip -d /bin/ && rm -r ${binary}_${version}_${osarch}.zip
   ver_fresh=`$binary --version`
   echo "Installed version is: $ver_fresh"
