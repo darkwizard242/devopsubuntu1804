@@ -8,12 +8,12 @@ apt-get autoclean -y
 
 # Zero free space to aid VM compression
 dd if=/dev/zero of=/EMPTY bs=1M
-rm -f /EMPTY
+rm -fv /EMPTY
 
 # Remove bash history
 unset HISTFILE
-rm -f /root/.bash_history
-rm -f /home/vagrant/.bash_history
+rm -fv /root/.bash_history
+rm -fv /home/vagrant/.bash_history
 
 # Cleanup log files
 find /var/log -type f | while read f; do echo -ne '' > $f; done;
@@ -22,7 +22,7 @@ find /var/log -type f | while read f; do echo -ne '' > $f; done;
 count=`df --sync -kP / | tail -n1  | awk -F ' ' '{print $4}'`;
 let count--
 dd if=/dev/zero of=/tmp/whitespace bs=1024 count=$count;
-rm /tmp/whitespace;
+rm -v /tmp/whitespace;
 
 # Whiteout /boot
 count=`df --sync -kP /boot | tail -n1 | awk -F ' ' '{print $4}'`;

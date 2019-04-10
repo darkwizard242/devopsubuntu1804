@@ -5,7 +5,7 @@ serverspec_dest_dir="/opt/serverspec-tests"
 ## Rsync serverspec-tests directory to /opt and change ownership & permissions
 ## Execute ServerSpec tests for devopsubuntu1804
 rsync -avzh /home/vagrant/serverspec-tests /opt/
-chown -R root:root /opt/serverspec-tests
+chown -Rv root:root /opt/serverspec-tests
 cd $serverspec_dest_dir
 
 if [ "$PWD" = "$serverspec_dest_dir" ];

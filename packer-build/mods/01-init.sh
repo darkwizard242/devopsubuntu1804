@@ -23,7 +23,7 @@ DEBIAN_FRONTEND=non-interactive apt-get install curl wget tmux xvfb vim inxi scr
 
 # Disable all current motd's and only use custom motd.
 ls -altr /home/vagrant/
-chmod -x /etc/update-motd.d/*
+chmod -v -x /etc/update-motd.d/*
 cp -R /home/vagrant/00-devops /etc/update-motd.d/ && ls -altr /etc/update-motd.d/
-chown -R root:root /etc/update-motd.d/00-devops
-chmod a+x /etc/update-motd.d/00-devops && ls -altr /etc/update-motd.d/
+chown -Rv root:root /etc/update-motd.d/00-devops
+chmod -v a+x /etc/update-motd.d/00-devops && ls -altr /etc/update-motd.d/
