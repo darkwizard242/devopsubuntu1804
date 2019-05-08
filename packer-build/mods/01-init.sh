@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -eu
 
 # Add vagrant user to sudoers.
 echo "vagrant ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers

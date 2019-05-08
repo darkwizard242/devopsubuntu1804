@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -eu
 
 # apt-get purge -y linux-image-3.0.0-12-generic-pae
 

@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -eu
 
 # Check if python3-pip is install. If installed, then install aws-cli
 apt list --installed | grep python3-pip
