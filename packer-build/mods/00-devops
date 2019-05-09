@@ -69,7 +69,7 @@ echo -e "$lightred SVN Version:\t\t $lightgreen$svn_ver\n $no_color"
 # Maintainer/creater support info
 
 email="am900820@gmail.com"
-github_url=https://github.com/Tech-Overlord/devopsubuntu1804
+github_url=https://github.com/darkwizard242/devopsubuntu1804
 
 echo -e "\n\t $bold$underline Maintainer's Information: $normal \n"
 echo -e "$lightred Name:\t\t $lightgreen Ali Muhammad"
