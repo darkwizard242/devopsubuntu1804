@@ -73,7 +73,8 @@
                 "mods/10-install_docker.sh",
                 "mods/11-install_awscli.sh",
                 "mods/12-install_subversion.sh",
-                "mods/13-install_ruby.sh"
+                "mods/13-install_ruby.sh",
+                "mods/11-install_azurecli.sh"
             ]
         },
         {
