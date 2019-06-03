@@ -1,6 +1,6 @@
 
 ## 1. devopsubuntu1804
-`devopsubuntu1804` is a Vagrant VM box with underlying base image of Ubuntu 18.04 LTS (bionic). It is created using [Hashicorp Packer](https://www.packer.io/) and is provisioned with multiple DevOps tools, programming/scripting languages and environments pre-installed and pre-configured to be ready to be used instantly after boot up.
+`devopsubuntu1804` is a Vagrant VM box with underlying base image of Ubuntu 18.04 LTS (bionic). It is created using [Hashicorp Packer](https://www.packer.io/) and is provisioned with multiple DevOps tools, programming/scripting languages and environments pre-installed and pre-configured to be ready to be used instantly after boot up. Tested using [ServerSpec](https://serverspec.org/).
 
 `devopsubuntu1804 Releases`: [Vagrant Cloud URL](https://app.vagrantup.com/darkwizard242/boxes/devopsubuntu1804)
 
@@ -18,7 +18,7 @@ It is expected that you have Vagrant and Virtualbox installed on your host machi
  * _Ansible_
     * `ansible 2.7.1`
  * _Terraform_
-    * `terraform x.x.x`
+    * `terraform 0.12.0`
  * _Jenkins_
     * `Jenkins ver. 2.138.2`
  * _Git_
@@ -27,6 +27,10 @@ It is expected that you have Vagrant and Virtualbox installed on your host machi
     * `subversion x.x.x`
  * _AWS-CLI_
     * `awscli x.x.x`
+ * _Azure-CLI_
+    * `az x.x.x`
+ * _GoogleCloudSDK-CLI_
+    * `gcloud x.x.x`
  * _Python_
     * `Python 2.7.15rc1`
     * `Python 3.x.x`
@@ -96,7 +100,7 @@ Below is table listing the type of users as well as their usernames and password
 |           System User        |                    docker                |                 password           |
 |           System User        |                    ansible               |                 password           |
 |           System User        |                    jenkins               |                 password           |
-|Jenkins Web-Application Console|                    admin                |                 admin              |
+|Jenkins Web-Application Console|                    admin                |                 stored in ( `/var/lib/jenkins/secrets/initialAdminPassword` )              |
 
 
 **NOTE:** _Though, the passwords for all of the users have been set by default by me so that anyone can use them easily. I would highly recommend to change the passwords of system level users via `root` user using the following commands:_
@@ -133,9 +137,10 @@ Following table consists the system **users** and their `$HOME` directories.
 |           jenkins            |                    /var/lib/jenkins      |
 
 
-## 5. `devopsubuntu1804` Build:
+## 5. `devopsubuntu1804` Build & Testing:
 Vagrant box `devopsubuntu1804` can be built using Packer. Pre-requisites include Virtualbox as that is the builder being used for the packer build.
 
+### 5.1. Building out your own customized `devopsubuntu1804`: 
 Assuming that Virtualbox and Packer are installed on the host system with internet accessibility, you can build `devopsubuntu1804` yourself using the following steps:
 
 1. Downloading **devopsubuntu1804** source code archive: `curl -Lo devopsubuntu1804.zip https://github.com/darkwizard242/devopsubuntu1804/archive/master.zip`
@@ -143,11 +148,30 @@ Assuming that Virtualbox and Packer are installed on the host system with intern
 1. Changing to packer build directory: `cd devopsubuntu1804/devopsubuntu1804-master/`
 1. Running Packer build: `packer build devopsubuntu1804.json`
 
+### 5.2. Testing `devopsubuntu1804` box:
+*ServerSpec* is used for the purpose of testing _devopsubuntu1804_ box as the last phase in the packer build.
+You may customize the test cases to meet your needs.
+
+Test report for `devopsubuntu1804`:
+```ruby
+
+```
+
+## 6. Initializing your customized version of `devopsubuntu1804` Build:
+Once you have built out a `devopsubuntu1804` box. You can easily test it out by adding it as vagrant box using the following commands:
+
+1. `vagrant box add mydevopubuntu1804box` /path/to/devopubuntu1804.box - This command will add the newly built customized devopsubuntu1804 box to vagrant so that it can be used. It would be wise to use the exact path to the devopsubuntu1804 box you have built.
+
+2. `vagrant init mydevopubuntu1804box` - This command will initialize the box you have associated your vagrant image with.
+
+3. `vagrant up mydevopsubuntu1804box` - Boots up the box.
+
 
 ## Acknowledgements:
  * [Packer](https://www.packer.io/)
  * [Vagrant](https://www.vagrantup.com/)
  * [Ubuntu](https://www.ubuntu.com/)
+ * [ServerSpec](https://serverspec.org/)
 
 ## Authors:
  * [Ali Muhammad](https://www.linkedin.com/in/ali-muhammad-759791130/)
