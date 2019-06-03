@@ -19,7 +19,7 @@ done
 
 ## Download Terraform and extract binary to /bin/
 binary="terraform"
-version="0.11.13"
+version="0.12.0"
 osarch="linux_amd64"
 if [ -e /bin/terraform ]
 then
