@@ -20,7 +20,7 @@ done
 binary="node_exporter"
 version="0.18.1"
 osarch="linux-amd64"
-if [ -e /bin/node_exporter ]
+if [ -e /usr/local/bin/node_exporter ]
 then
   ver_existing=`$binary --version`
   echo "node_exporter binary currently exists in /bin/ !"
@@ -28,9 +28,17 @@ else
   echo -e "\nInstalling ${binary}!\n"
   cd /opt/
   wget -v https://github.com/prometheus/${binary}/releases/download/v${version}/${binary}-${version}.${osarch}.tar.gz
-  tar -xzf ${binary}-${version}.${osarch}.tar.gz && rm -r ${binary}-${version}.${osarch}.tar.gz
-  cd /opt/${binary}-${version}.${osarch}
-  cp -v /opt/${binary}-${version}.${osarch}/${binary} /bin/
+  if [ -d "/opt/$binary" ];
+  then
+    echo -e "\nDirectory: /opt/$binary exists. About to remove it.\n"
+    rm -rfv /opt/$binary
+  else
+    echo -e "\nDirectory: /opt/$binary doesn't exist. Creating /opt/$binary !\n"
+    mkdir -pv /opt/$binary
+  fi
+  tar -xzf ${binary}-${version}.${osarch}.tar.gz -C /opt/$binary --strip-components=1 && rm -r ${binary}-${version}.${osarch}.tar.gz
+  cd /opt/${binary}
+  cp -v /opt/${binary}/${binary} /usr/local/bin/
   echo -e "\nInstalled version is: $version"
   echo -e "\nCreating service for node_exporter"
   cat <<EOF >/etc/systemd/system/${binary}.service
@@ -42,16 +50,16 @@ After=network.target
 User=root
 Group=root
 Type=simple
-ExecStart=/bin/${binary}
+ExecStart=/usr/local/bin/${binary}
 
 [Install]
 WantedBy=multi-user.target
 EOF
-  echo -e "Performing systemctl daemon reload."
+  echo -e "\nPerforming systemctl daemon reload."
   systemctl daemon-reload
-  echo -e "Enabling systemctl service for ${binary}."
+  echo -e "\nEnabling systemctl service for ${binary}."
   systemctl enable ${binary}.service
-  echo -e "Starting systemctl service for ${binary}."
+  echo -e "\nStarting systemctl service for ${binary}.\n"
   systemctl start ${binary}.service
-  echo -e "\n\n\n\n"
+  echo -e "\n"
 fi
