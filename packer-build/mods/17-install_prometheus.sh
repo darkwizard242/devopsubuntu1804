@@ -27,10 +27,18 @@ else
   echo -e "\nInstalling ${binary}!\n"
   cd /opt/
   wget -v https://github.com/${binary}/${binary}/releases/download/v${version}/${binary}-${version}.${osarch}.tar.gz
-  tar -xzf ${binary}-${version}.${osarch}.tar.gz && rm -r ${binary}-${version}.${osarch}.tar.gz
-  cd /opt/${binary}-${version}.${osarch}
-  rm -v /opt/${binary}-${version}.${osarch}/${binary}.yml
-  cat <<EOF >/opt/${binary}-${version}.${osarch}/${binary}.yml
+  if [ -d "/opt/$binary" ];
+  then
+    echo -e "Directory: /opt/$binary exists. About to remove it."
+    rm -rfv /opt/$binary
+  else
+    echo -e "\nDirectory: /opt/$binary doesn't exist. Creating /opt/$binary !\n"
+    mkdir -pv /opt/$binary
+  fi
+  tar -xzf ${binary}-${version}.${osarch}.tar.gz -C /opt/$binary --strip-components=1 && rm -r ${binary}-${version}.${osarch}.tar.gz
+  cd /opt/${binary}
+  rm -v /opt/${binary}/${binary}.yml
+  cat <<EOF >/opt/${binary}/${binary}.yml
   global:
     scrape_interval:     5s # Set the scrape interval to every 5 seconds. Default is every 1 minute.
     evaluation_interval: 5s # Evaluate rules every 5 seconds. The default is every 1 minute.
@@ -42,7 +50,7 @@ else
       static_configs:
       - targets: ['localhost:9090']
 EOF
-  cp -v /opt/${binary}-${version}.${osarch}/${binary} /bin/
+  cp -v /opt/${binary}/${binary} /usr/local/bin/
   echo -e "\nInstalled version is: $version"
   cat <<EOF >/etc/systemd/system/${binary}.service
 [Unit]
@@ -53,18 +61,18 @@ After=network.target
 User=root
 Group=root
 Type=simple
-ExecStart=/bin/${binary} --config.file=/opt/${binary}-${version}.${osarch}/${binary}.yml
+ExecStart=/usr/local/bin/${binary} --config.file=/opt/${binary}/${binary}.yml
 
 [Install]
 WantedBy=multi-user.target
 EOF
-  echo -e "Performing systemctl daemon reload."
+  echo -e "\nPerforming systemctl daemon reload.\n"
   systemctl daemon-reload
-  echo -e "Enabling systemctl service for ${binary}."
+  echo -e "\nEnabling systemctl service for ${binary}.\n"
   systemctl enable ${binary}.service
-  echo -e "Starting systemctl service for ${binary}."
+  echo -e "\nStarting systemctl service for ${binary}.\n"
   systemctl start ${binary}.service
-  echo -e "\n\n\n\n"
+  echo -e "\n"
   #echo -e "\nExecuting PROMETHEUS now!\n!!"
   #/bin/prometheus --config.file=/opt/${binary}-${version}.${osarch}/${binary}.yml > /dev/null 2>&1 &
 fi
