@@ -48,7 +48,7 @@ After=network.target
 User=root
 Group=root
 Type=simple
-ExecStart=/bin/${binary}-server -homepath /opt/${binary} -config /opt/${binary}/conf/defaults.ini
+ExecStart=/usr/local/bin/${binary}-server -homepath /opt/${binary} -config /opt/${binary}/conf/defaults.ini
 
 [Install]
 WantedBy=multi-user.target
