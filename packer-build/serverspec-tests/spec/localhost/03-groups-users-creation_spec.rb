@@ -1,32 +1,32 @@
 require 'spec_helper'
 
 ## Validate  groups.
-describe group('vagrant') do
+describe group('vagrant'), :if => os[:family] == 'ubuntu' do
   it { should exist }
 end
 
-describe group('docker') do
+describe group('docker'), :if => os[:family] == 'ubuntu' do
   it { should exist }
 end
 
-describe group('jenkins') do
+describe group('jenkins'), :if => os[:family] == 'ubuntu' do
   it { should exist }
 end
 
-describe group('ansible') do
+describe group('ansible'), :if => os[:family] == 'ubuntu' do
   it { should exist }
 end
 
 
 ## Validate users.
-describe user('vagrant') do
+describe user('vagrant'), :if => os[:family] == 'ubuntu' do
   it { should exist }
   it { should belong_to_group 'vagrant' }
   it { should have_home_directory '/home/vagrant' }
   it { should have_login_shell '/bin/bash' }
 end
 
-describe user('docker') do
+describe user('docker'), :if => os[:family] == 'ubuntu' do
   it { should exist }
   it { should belong_to_primary_group 'docker' }
   it { should belong_to_group 'docker' }
@@ -35,7 +35,7 @@ describe user('docker') do
   it { should have_login_shell '/bin/bash' }
 end
 
-describe user('ansible') do
+describe user('ansible'), :if => os[:family] == 'ubuntu' do
   it { should exist }
   it { should belong_to_primary_group 'ansible' }
   it { should belong_to_group 'docker' }

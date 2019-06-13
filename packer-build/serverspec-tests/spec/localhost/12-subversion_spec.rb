@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe package('subversion') do
+describe package('subversion'), :if => os[:family] == 'ubuntu' do
   it { should be_installed }
 end
 
-describe command('svn --version') do
+describe command('svn --version'), :if => os[:family] == 'ubuntu' do
   its(:exit_status) { should eq 0 }
 end
