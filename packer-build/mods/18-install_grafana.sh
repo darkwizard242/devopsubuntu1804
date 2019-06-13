@@ -27,9 +27,17 @@ else
   echo -e "\nInstalling ${binary}!\n"
   cd /opt/
   wget -v https://dl.${binary}.com/oss/release/${binary}-${version}.${osarch}.tar.gz
-  tar -xzf ${binary}-${version}.${osarch}.tar.gz && rm -r ${binary}-${version}.${osarch}.tar.gz
-  cd /opt/${binary}-${version}
-  cp -v /opt/${binary}-${version}/bin/${binary}-server /bin/
+  if [ -d "/opt/$binary" ];
+  then
+    echo -e "\nDirectory: /opt/$binary exists. About to remove it.\n"
+    rm -rfv /opt/$binary
+  else
+    echo -e "\nDirectory: /opt/$binary doesn't exist. Creating /opt/$binary !\n"
+    mkdir -pv /opt/$binary
+  fi
+  tar -xzf ${binary}-${version}.${osarch}.tar.gz -C /opt/$binary --strip-components=1 && rm -r ${binary}-${version}.${osarch}.tar.gz
+  cd /opt/${binary}
+  cp -v /opt/${binary}/bin/${binary}-server /usr/local/bin/
   echo -e "\nInstalled version is: $version"
   cat <<EOF >/etc/systemd/system/${binary}.service
 [Unit]
@@ -40,16 +48,16 @@ After=network.target
 User=root
 Group=root
 Type=simple
-ExecStart=/bin/${binary}-server -homepath /opt/${binary}-${version} -config /opt/${binary}-${version}/conf/defaults.ini
+ExecStart=/bin/${binary}-server -homepath /opt/${binary} -config /opt/${binary}/conf/defaults.ini
 
 [Install]
 WantedBy=multi-user.target
 EOF
-  echo -e "Performing systemctl daemon reload."
+  echo -e "\nPerforming systemctl daemon reload."
   systemctl daemon-reload
-  echo -e "Enabling systemctl service for ${binary}."
+  echo -e "\nEnabling systemctl service for ${binary}."
   systemctl enable ${binary}.service
-  echo -e "Starting systemctl service for ${binary}."
+  echo -e "\nStarting systemctl service for ${binary}.\n"
   systemctl start ${binary}.service
-  echo -e "\n\n\n\n"
+  echo -e "\n"
 fi
