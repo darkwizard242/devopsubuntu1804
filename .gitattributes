@@ -8,3 +8,7 @@ Vagrantfile text eol=lf
 *.py text eol=lf
 *.gita* text eol=lf
 *.giti* text eol=lf
+*.rb* text eol=lf
+*Rakefile* text eol=lf
+*rspec* text eol=lf
+*cfg* text eol=lf
