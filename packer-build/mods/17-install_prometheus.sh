@@ -39,16 +39,29 @@ else
   cd /opt/${binary}
   rm -v /opt/${binary}/${binary}.yml
   cat <<EOF >/opt/${binary}/${binary}.yml
-  global:
-    scrape_interval:     5s # Set the scrape interval to every 5 seconds. Default is every 1 minute.
-    evaluation_interval: 5s # Evaluate rules every 5 seconds. The default is every 1 minute.
-  scrape_configs:
-    - job_name: 'node'
-      static_configs:
-      - targets: ['localhost:9100']
-    - job_name: 'prometheus'
-      static_configs:
-      - targets: ['localhost:9090']
+global:
+  scrape_interval:     5s
+  evaluation_interval: 5s
+
+# rule_files:
+#   - "rules.yml"
+
+# alerting:
+#   alertmanagers:
+#   - static_configs:
+#     - targets:
+#       - localhost:9093
+
+scrape_configs:
+  - job_name: 'node'
+    static_configs:
+    - targets: ['localhost:9100']
+  - job_name: 'prometheus'
+    static_configs:
+    - targets: ['localhost:9090']
+  # - job_name: 'alertmanager'
+  #   static_configs:
+  #   - targets: ['localhost:9093']
 EOF
   cp -v /opt/${binary}/${binary} /usr/local/bin/
   echo -e "\nInstalled version is: $version"
