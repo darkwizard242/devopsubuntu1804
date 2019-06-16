@@ -53,7 +53,7 @@ pip3_ver=`python3 -m pip --version | awk '{ print $2 }'`
 ruby_ver=`ruby --version | awk '{ print $2 }'`
 git_ver=`git --version | awk '{ print $3 }'`
 svn_ver=`svn --version | awk 'NR==1 { print $3,$4 }'`
-grafana-server_ver=`grafana-server -v | awk 'NR==1{print $2}'`
+grafanaserver_ver=`grafana-server -v | awk 'NR==1{print $2}'`
 
 echo -e "\n\t $bold$underline DevOps Toolstack: $normal \n"
 echo -e "$lightred Jenkins Version:\t $lightgreen$jenkins_ver"
@@ -63,7 +63,7 @@ echo -e "$lightred Docker Version:\t $lightgreen$docker_ver"
 echo -e "$lightred AWS-CLI Version:\t $lightgreen$awscli_ver"
 echo -e "$lightred Azure-CLI Version:\t $lightgreen$azurecli_ver"
 echo -e "$lightred GCloud SDK Version:\t $lightgreen$gcloud_ver"
-echo -e "$lightred Grafana Version:\t $lightgreen$grafana-server_ver"
+echo -e "$lightred Grafana Version:\t $lightgreen$grafanaserver_ver"
 echo -e "$lightred Python3 Version:\t $lightgreen$python3_ver"
 echo -e "$lightred Python3-pip Version:\t $lightgreen$pip3_ver"
 echo -e "$lightred Ruby Version:\t\t $lightgreen$ruby_ver"
