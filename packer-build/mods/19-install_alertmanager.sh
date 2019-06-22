@@ -25,6 +25,15 @@ then
   ver_existing=`$binary --version`
   echo "alertmanager binary currently exists in /bin/ !"
 else
+  id $binary &> /dev/null && echo -e
+  if [ $? -eq 0 ];
+    then
+      echo "The user: $binary does exist." && echo -e
+    else
+      echo "The user: $binary does not exist. Creating user: $binary !"
+      useradd --no-create-home --shell /bin/false $binary
+  fi
+  mkdir -pv /etc/$binary
   echo -e "\nInstalling ${binary}!\n"
   cd /opt/
   wget -v https://github.com/prometheus/${binary}/releases/download/v${version}/${binary}-${version}.${osarch}.tar.gz
@@ -38,22 +47,35 @@ else
   fi
   tar -xzf ${binary}-${version}.${osarch}.tar.gz -C /opt/$binary --strip-components=1 && rm -r ${binary}-${version}.${osarch}.tar.gz
   cd /opt/${binary}
-  cp -v /opt/${binary}/${binary} /usr/local/bin/
+  echo -e "\nMoving binary files to /usr/local/bin\n"
+  mv -v /opt/${binary}/${binary} /opt/${binary}/amtool /usr/local/bin/
+  echo -e "\nMoving console dir(s) & ${binary}.yml /etc/${binary}\n"
+  mv -v /opt/${binary}/${binary}.yml /etc/${binary}/
+  echo -e "\nAssigning ownership of /usr/local/bin/${binary} & /usr/local/bin/promtool to ${binary}\n"
+  chown -Rv ${binary}:${binary} /usr/local/bin/${binary} /usr/local/bin/amtool
+  echo -e "\nAssigning ownership of /etc/${binary} to ${binary}\n"
+  chown -Rv ${binary}:${binary} /etc/${binary}
+  echo -e "\nRemoving temporary ${binary} directory from /opt"
+  rm -rfv /opt/${binary}
   echo -e "\nInstalled version is: $version"
-  echo -e "\nCreating service for alertmanager"
+  echo -e "\nCreating service for ${binary}"
   cat <<EOF >/etc/systemd/system/${binary}.service
 [Unit]
-Description=alertmanager - Manages Alerting based on rules.
-After=network.target
+Description=Alertmanager - Manages Alerting based on rules.
+Wants=network-online.target
+After=network-online.target
 
 [Service]
-User=root
-Group=root
+User=${binary}
+Group=${binary}
 Type=simple
-ExecStart=/usr/local/bin/${binary} --config.file=/opt/${binary}/${binary}.yml
+WorkingDirectory=/etc/${binary}/
+ExecStart=/usr/local/bin/${binary} \
+    --config.file=/etc/${binary}/${binary}.yml
 
 [Install]
 WantedBy=multi-user.target
+
 EOF
   echo -e "\nPerforming systemctl daemon reload."
   systemctl daemon-reload
