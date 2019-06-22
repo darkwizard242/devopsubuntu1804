@@ -20,10 +20,20 @@ done
 binary="prometheus"
 version="2.10.0"
 osarch="linux-amd64"
-if [ -e /bin/prometheus ]
+if [ -e /usr/local/bin/prometheus ]
 then
   echo "Prometheus binary currently exists in /bin/ !"
 else
+  id $binary &> /dev/null && echo -e
+  if [ $? -eq 0 ];
+    then
+      echo "The user: $binary does exist." && echo -e
+    else
+      echo "The user: $binary does not exist. Creating user: $binary !"
+      useradd --no-create-home --shell /bin/false prometheus $binary
+  fi
+  mkdir -pv /etc/$binary /var/lib/$binary
+  chown -v $binary:$binary /var/lib/$binary
   echo -e "\nInstalling ${binary}!\n"
   cd /opt/
   wget -v https://github.com/${binary}/${binary}/releases/download/v${version}/${binary}-${version}.${osarch}.tar.gz
@@ -63,21 +73,36 @@ scrape_configs:
   #   static_configs:
   #   - targets: ['localhost:9093']
 EOF
-  cp -v /opt/${binary}/${binary} /usr/local/bin/
+  echo -e "\nMoving binary files to /usr/local/bin\n"
+  mv -v /opt/${binary}/${binary} /opt/${binary}/promtool /usr/local/bin/
+  echo -e "\nMoving console dir(s) & ${binary}.yml /etc/${binary}\n"
+  mv -v console* ${binary}.yml /etc/${binary}/
+  echo -e "\nAssigning ownership of /usr/local/bin/${binary} & /usr/local/bin/promtool to ${binary}\n"
+  chown -Rv ${binary}:${binary} /usr/local/bin/${binary} /usr/local/bin/promtool
+  echo -e "\nAssigning ownership of /etc/${binary} to ${binary}\n"
+  chown -Rv ${binary}:${binary} /etc/${binary}
+  echo -e "\nAssigning ownership of /var/lib/${binary} to ${binary}\n"
+  chown -Rv ${binary}:${binary} /var/lib/${binary}
   echo -e "\nInstalled version is: $version"
   cat <<EOF >/etc/systemd/system/${binary}.service
 [Unit]
 Description=Prometheus - monitoring system and time series database.
-After=network.target
+Wants=network-online.target
+After=network-online.target
 
 [Service]
-User=root
-Group=root
+User=${binary}
+Group=${binary}
 Type=simple
-ExecStart=/usr/local/bin/${binary} --config.file=/opt/${binary}/${binary}.yml
+ExecStart=/usr/local/bin/${binary} \
+    --config.file /etc/${binary}/${binary}.yml \
+    --storage.tsdb.path /var/lib/${binary}/ \
+    --web.console.templates=/etc/${binary}/consoles \
+    --web.console.libraries=/etc/${binary}/console_libraries
 
 [Install]
 WantedBy=multi-user.target
+
 EOF
   echo -e "\nPerforming systemctl daemon reload.\n"
   systemctl daemon-reload
