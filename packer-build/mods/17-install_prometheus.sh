@@ -30,7 +30,7 @@ else
       echo "The user: $binary does exist." && echo -e
     else
       echo "The user: $binary does not exist. Creating user: $binary !"
-      useradd --no-create-home --shell /bin/false prometheus $binary
+      useradd --no-create-home --shell /bin/false $binary
   fi
   mkdir -pv /etc/$binary /var/lib/$binary
   chown -v $binary:$binary /var/lib/$binary
@@ -76,13 +76,15 @@ EOF
   echo -e "\nMoving binary files to /usr/local/bin\n"
   mv -v /opt/${binary}/${binary} /opt/${binary}/promtool /usr/local/bin/
   echo -e "\nMoving console dir(s) & ${binary}.yml /etc/${binary}\n"
-  mv -v console* ${binary}.yml /etc/${binary}/
+  mv -v /opt/${binary}/console* /opt/${binary}/${binary}.yml /etc/${binary}/
   echo -e "\nAssigning ownership of /usr/local/bin/${binary} & /usr/local/bin/promtool to ${binary}\n"
   chown -Rv ${binary}:${binary} /usr/local/bin/${binary} /usr/local/bin/promtool
   echo -e "\nAssigning ownership of /etc/${binary} to ${binary}\n"
   chown -Rv ${binary}:${binary} /etc/${binary}
   echo -e "\nAssigning ownership of /var/lib/${binary} to ${binary}\n"
   chown -Rv ${binary}:${binary} /var/lib/${binary}
+  echo -e "\nRemoving temporary ${binary} directory from /opt"
+  rm -rfv /opt/${binary}
   echo -e "\nInstalled version is: $version"
   cat <<EOF >/etc/systemd/system/${binary}.service
 [Unit]
