@@ -20,7 +20,7 @@ done
 binary="grafana"
 version="6.2.2"
 osarch="linux-amd64"
-if [ -e /bin/grafana ]
+if [ -e /usr/local/bin/grafana ]
 then
   echo "Grafana binary currently exists in /bin/ !"
 else
