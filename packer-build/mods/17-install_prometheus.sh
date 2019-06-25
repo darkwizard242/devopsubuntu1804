@@ -56,11 +56,11 @@ global:
 # rule_files:
 #   - "rules.yml"
 
-# alerting:
-#   alertmanagers:
-#   - static_configs:
-#     - targets:
-#       - localhost:9093
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - localhost:9093
 
 scrape_configs:
   - job_name: 'node'
