@@ -51,6 +51,7 @@ else
   echo -e "\nAssigning ownership of /usr/local/bin/${binary}\n"
   chown -Rv ${binary}:${binary} /usr/local/bin/${binary}
   echo -e "\nInstalled version is: $version"
+  rm -rfv /opt/${binary}
   echo -e "\nCreating service for node_exporter"
   cat <<EOF >/etc/systemd/system/${binary}.service
 [Unit]
