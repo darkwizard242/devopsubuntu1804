@@ -16,10 +16,32 @@ echo 'APT::Periodic::Enable "0";' >> /etc/apt/apt.conf.d/10periodic
 DEBIAN_FRONTEND=non-interactive apt-get update -y
 
 # Install necessary libraries for guest additions and Vagrant NFS Share
-DEBIAN_FRONTEND=non-interactive apt-get install linux-headers-$(uname -r) build-essential dkms nfs-common -y
+libraries="linux-headers-$(uname -r) build-essential dkms nfs-common"
+for library in $libraries;
+do
+  dpkg -s $library &> /dev/null && echo -e
+  if [ $? -eq 0 ];
+    then
+      echo -e "\n$library is already available and installed within the system.\n"
+    else
+      echo -e  "\nAbout to install $library.\n"
+      DEBIAN_FRONTEND=non-interactive apt-get install $library -y
+  fi
+done
 
 # Install necessary dependencies
-DEBIAN_FRONTEND=non-interactive apt-get install curl wget tmux xvfb vim inxi screenfetch tree -y
+dependencies="curl wget tmux xvfb vim inxi screenfetch tree sysstat stress"
+for dependency in $dependencies;
+do
+  dpkg -s $dependency &> /dev/null && echo -e
+  if [ $? -eq 0 ];
+    then
+      echo -e "\n$dependency is already available and installed within the system.\n"
+    else
+      echo -e  "\nAbout to install $dependency.\n"
+      DEBIAN_FRONTEND=non-interactive apt-get install $dependency -y
+  fi
+done
 
 # Disable all current motd's and only use custom motd.
 ls -altr /home/vagrant/
