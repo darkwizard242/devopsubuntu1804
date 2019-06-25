@@ -69,9 +69,12 @@ scrape_configs:
   - job_name: 'prometheus'
     static_configs:
     - targets: ['localhost:9090']
-  # - job_name: 'alertmanager'
+  - job_name: 'alertmanager'
+    static_configs:
+    - targets: ['localhost:9093']
+  # - job_name: 'cadvisor'
   #   static_configs:
-  #   - targets: ['localhost:9093']
+  #   - targets: ['localhost:8000']
 EOF
   echo -e "\nMoving binary files to /usr/local/bin\n"
   mv -v /opt/${binary}/${binary} /opt/${binary}/promtool /usr/local/bin/
