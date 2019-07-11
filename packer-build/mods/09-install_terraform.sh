@@ -21,7 +21,7 @@ done
 binary="terraform"
 version="0.12.0"
 osarch="linux_amd64"
-if [ -e /bin/terraform ]
+if [ -e /usr/local/bin/terraform ]
 then
   ver_existing=`$binary --version`
   echo "Terraform binary currently exists in /bin/ !"
