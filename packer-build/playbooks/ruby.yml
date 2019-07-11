@@ -19,6 +19,10 @@
     args:
       executable: /bin/bash
     register: ruby_version
+  - name: Install serverspec
+    shell: gem install serverspec
+    args:
+      executable: /bin/bash
   - name: Print Ruby's version
     debug:
       var: ruby_version.stdout
