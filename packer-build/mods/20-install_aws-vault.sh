@@ -27,13 +27,9 @@ then
   echo "Terraform binary currently exists in /bin/ !"
   echo "Currently available version is: $ver_existing"
 else
-  curl -L -o /usr/local/bin/aws-vault https://github.com/99designs/${binary}/releases/download/v${version}/${binary}-${osarch}.zip
-  unzip ${binary}_${version}_${osarch}.zip -d /bin/ && rm -r ${binary}_${version}_${osarch}.zip
+  curl -L -o /usr/local/bin/aws-vault https://github.com/99designs/${binary}/releases/download/v${version}/${binary}-${osarch}
+  echo -e "\n\nexport AWS_VAULT_BACKEND="file"" >> .bashrc
+  chmod -v 0755 /usr/local/bin/${binary}
   ver_fresh=`$binary --version`
   echo "Installed version is: $ver_fresh"
 fi
-
-
-sudo curl -L -o /usr/local/bin/aws-vault https://github.com/99designs/aws-vault/releases/download/v4.6.2/aws-vault-linux-amd64
-echo -e "\n\nexport AWS_VAULT_BACKEND="file"" >> .bashrc
-chmod -v 0755 /usr/local/bin/aws-vault
