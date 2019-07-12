@@ -1,0 +1,42 @@
+- name: Playbook to Install Gcloud
+  hosts: localhost  ## For running the playbook on localhost system.
+  become: yes
+  connection: local ## Runs the playbook locally. Change to ssh if required to run on other instances.
+  gather_facts: yes
+  vars:
+    app: google-cloud-sdk
+    sdk_rel: cloud-sdk
+    gcloud_repo: http://packages.cloud.google.com/apt
+    gpg_file: /etc/apt/trusted.gpg.d/gcloud.gpg
+    gcloud_gpg_url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+  tasks:
+  - name: Update Repository cache - PRE
+    apt:
+      update_cache: yes
+  - name: Add gpg key for {{ app }}
+    apt_key:
+      url: "{{ gcloud_gpg_url }}"
+      keyring: "{{ gpg_file }}"
+  - name: Add {{ app }} Repository
+    apt_repository:
+      repo: "deb {{ gcloud_repo }} {{ sdk_rel }}-{{ ansible_distribution_release }} main"
+      state: present
+      filename: "{{ app }}"
+  - name: Update Repository cache - POST
+    apt:
+      update_cache: yes
+  - name: Install {{ app }}
+    apt:
+      name: "{{ app }}"
+      state: latest
+      force_apt_get: yes
+      autoclean: yes
+      autoremove: yes
+  - name: Check {{ app }} version
+    shell: "gcloud --version | awk 'NR==1{print $4}'"
+    args:
+      executable: /bin/bash
+    register: gcloud_version
+  - name: Print {{ app }} version
+    debug:
+      var: gcloud_version.stdout
