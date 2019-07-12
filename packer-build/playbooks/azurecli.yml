@@ -1,0 +1,42 @@
+- name: Playbook to Install Azure CLI
+  hosts: localhost  ## For running the playbook on localhost system.
+  become: yes
+  connection: local ## Runs the playbook locally. Change to ssh if required to run on other instances.
+  gather_facts: yes
+  vars:
+    app: azure-cli
+    osarch: arch=amd64
+    ms_repo: https://packages.microsoft.com/repos
+    gpg_file: /etc/apt/trusted.gpg.d/microsoft.asc.gpg
+    ms_gpg_url: https://packages.microsoft.com/keys/microsoft.asc
+  tasks:
+  - name: Update Repository cache - PRE
+    apt:
+      update_cache: yes
+  - name: Add gpg key for {{ app }}
+    apt_key:
+      url: "{{ ms_gpg_url }}"
+      keyring: "{{ gpg_file }}"
+  - name: Add {{ app }} Repository
+    apt_repository:
+      repo: "deb [{{ osarch }}] {{ ms_repo }}/{{ app }} {{ ansible_distribution_release }} main"
+      state: present
+      filename: "{{ app }}"
+  - name: Update Repository cache - POST
+    apt:
+      update_cache: yes
+  - name: Install {{ app }}
+    apt:
+      name: "{{ app }}"
+      state: latest
+      force_apt_get: yes
+      autoclean: yes
+      autoremove: yes
+  - name: Check {{ app }} version
+    shell: "az --version | awk 'NR==1{print $2}'"
+    args:
+      executable: /bin/bash
+    register: az_version
+  - name: Print {{ app }} version
+    debug:
+      var: az_version.stdout
