@@ -79,7 +79,9 @@
                 "mods/16-install_node_exporter.sh",
                 "mods/17-install_prometheus.sh",
                 "mods/18-install_grafana.sh",
-                "mods/19-install_alertmanager.sh"
+                "mods/19-install_alertmanager.sh",
+                "mods/20-install_aws-vault.sh",
+                "mods/21-install_hugo.sh"
             ]
         },
         {
