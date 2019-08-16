@@ -21,4 +21,4 @@ script:
   - sudo packer --version
   - cd packer-build
   - sudo packer validate devopsubuntu1804.json
-  - sudo packer build devopsubuntu1804.json
+  - #sudo packer build devopsubuntu1804.json
