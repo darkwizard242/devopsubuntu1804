@@ -11,9 +11,13 @@ before_script:
   - sudo apt-get install -y unzip wget libopus0 libqt5core5a libqt5gui5 libqt5opengl5 libqt5printsupport5 libqt5widgets5 libqt5x11extras5 libsdl1.2debian libvpx5
   - wget -v https://download.virtualbox.org/virtualbox/6.0.10/virtualbox-6.0_6.0.10-132072~Ubuntu~bionic_amd64.deb # download virtual box latest debian file
   - sudo dpkg -i virtualbox-6.0_6.0.10-132072~Ubuntu~bionic_amd64.deb # install virtual box
+  - sudo /sbin/vboxconfig
 
 script:
   - wget -v $APP_URL/$APP_NAME/$APP_VERSION/$APP_NAME\_$APP_VERSION\_$APP_ARCH.zip
   - sudo unzip $APP_NAME\_$APP_VERSION\_$APP_ARCH.zip -d /usr/local/bin/
   - sudo chmod +x /usr/local/bin/$APP_NAME
   - $APP_NAME --version
+  - sudo packer --version
+  - cd packer-build
+  - sudo packer validate devopsubuntu1804.json
