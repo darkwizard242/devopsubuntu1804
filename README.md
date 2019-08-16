@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/darkwizard242/devopsubuntu1804.svg?branch=master)](https://travis-ci.com/darkwizard242/devopsubuntu1804)
 
 ## 1. devopsubuntu1804
 `devopsubuntu1804` is a Vagrant VM box with underlying base image of Ubuntu 18.04 LTS (bionic). It is created using [Hashicorp Packer](https://www.packer.io/) and is provisioned with multiple DevOps tools, programming/scripting languages and environments pre-installed and pre-configured to be ready to be used instantly after boot up. Tested using [ServerSpec](https://serverspec.org/).
