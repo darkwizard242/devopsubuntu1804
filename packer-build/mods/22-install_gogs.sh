@@ -61,7 +61,7 @@ else
   cd "$pathtobinary"
   mkdir -pv "$pathtobinary"/custom/conf/
   cat <<EOF >"$pathtobinary"/custom/conf/app.ini
-PP_NAME = SA Repository Manager
+PP_NAME = Repository Manager
 RUN_USER = ${binary}
 RUN_MODE = prod
 
@@ -146,8 +146,8 @@ NoNewPrivileges=true
 EOF
   echo -e "\nPerforming systemctl daemon reload."
   systemctl daemon-reload
-  # echo -e "\nEnabling systemctl service for ${binary}."
-  # systemctl enable ${binary}.service
+  echo -e "\nEnabling systemctl service for ${binary}."
+  systemctl enable ${binary}.service
   echo -e "\nStarting systemctl service for ${binary}.\n"
   systemctl start ${binary}.service
   echo -e "\n"
