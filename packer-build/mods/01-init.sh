@@ -30,7 +30,7 @@ do
 done
 
 # Install necessary dependencies
-dependencies="curl wget tmux xvfb vim inxi screenfetch tree sysstat stress"
+dependencies="curl wget tmux xvfb vim inxi screenfetch tree sysstat stress shellcheck"
 for dependency in $dependencies;
 do
   dpkg -s $dependency &> /dev/null && echo -e
