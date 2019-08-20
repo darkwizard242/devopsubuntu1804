@@ -8,6 +8,7 @@ version="0.11.91"
 osarch="linux_amd64"
 pathtobinary="/opt/${binary}"
 pathtobinaryrepos="${pathtobinary}/repositories"
+binaryport="3005"
 
 ## Installing packages required for $binary
 for dependency in $dependencies;
@@ -79,8 +80,8 @@ ROOT = $pathtobinaryrepos
 
 [server]
 DOMAIN           = ${servername}
-HTTP_PORT        = 3000
-ROOT_URL         = http://${servername}:3000/
+HTTP_PORT        = $binaryport
+ROOT_URL         = http://${servername}:$binaryport/
 DISABLE_SSH      = false
 SSH_PORT         = 2203
 START_SSH_SERVER = true
