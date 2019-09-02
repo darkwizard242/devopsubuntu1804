@@ -1,10 +1,15 @@
-#!/bin/bash -eu
+#!/bin/bash -e
+
+# Shellcheck fixes for: SC2006, SC2086, SC2129, SC2181
 
 # Add vagrant user to sudoers.
-echo "vagrant ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-echo "ansible ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-echo "docker ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+{
+  echo "vagrant ALL=(ALL) NOPASSWD: ALL"
+  echo "ansible ALL=(ALL) NOPASSWD: ALL"
+  echo "jenkins ALL=(ALL) NOPASSWD: ALL"
+  echo "docker ALL=(ALL) NOPASSWD: ALL"
+} >> /etc/sudoers
+
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
 
 # Add vagrant user to sudo group
@@ -19,13 +24,12 @@ DEBIAN_FRONTEND=non-interactive apt-get update -y
 libraries="linux-headers-$(uname -r) build-essential dkms nfs-common"
 for library in $libraries;
 do
-  dpkg -s $library &> /dev/null && echo -e
-  if [ $? -eq 0 ];
+  if dpkg -s "$library" &> /dev/null;
     then
       echo -e "\n$library is already available and installed within the system.\n"
     else
       echo -e  "\nAbout to install $library.\n"
-      DEBIAN_FRONTEND=non-interactive apt-get install $library -y
+      DEBIAN_FRONTEND=non-interactive apt-get install "$library" -y
   fi
 done
 
@@ -33,13 +37,12 @@ done
 dependencies="curl wget tmux xvfb vim inxi screenfetch tree sysstat stress shellcheck"
 for dependency in $dependencies;
 do
-  dpkg -s $dependency &> /dev/null && echo -e
-  if [ $? -eq 0 ];
+  if dpkg -s "$dependency" &> /dev/null;
     then
       echo -e "\n$dependency is already available and installed within the system.\n"
     else
       echo -e  "\nAbout to install $dependency.\n"
-      DEBIAN_FRONTEND=non-interactive apt-get install $dependency -y
+      DEBIAN_FRONTEND=non-interactive apt-get install "$dependency" -y
   fi
 done
 
