@@ -1,50 +1,49 @@
 #!/bin/bash
 
+# Shellcheck fixes for: SC2181, SC2086, SC2164
+
 ## Installing packages required for Grafana
 dependencies="wget tar"
 
 for dependency in $dependencies;
 do
-  dpkg -s $dependency &> /dev/null && echo -e
-  if [ $? -eq 0 ];
+  if dpkg -s "$dependency" &> /dev/null;
     then
-      echo "$dependency is already available and installed within the system." && echo -e
+      echo -e "\n$dependency is already available and installed within the system."
     else
-      echo "About to install $dependency." && echo -e
-      DEBIAN_FRONTEND=non-interactive apt-get install $dependency -y
+      echo -e "About to install:\t$dependency.\n"
+      DEBIAN_FRONTEND=non-interactive apt-get install "$dependency" -y
   fi
 done
 
 
-## Download Grafana and extract binary to /bin/
+## Download Grafana and extract binary to /usr/local/bin
 binary="grafana"
 version="6.2.2"
 osarch="linux-amd64"
 if [ -e /opt/grafana/bin/grafana-server ]
 then
-  echo "Grafana binary currently exists in /opt/grafana/bin !"
+  echo -e "$binary currently exists in:\t/opt/grafana/bin\n"
 else
-  id $binary &> /dev/null && echo -e
-  if [ $? -eq 0 ];
+  if id $binary &> /dev/null;
     then
-      echo "The user: $binary does exist." && echo -e
+      echo -e "\nThe user:\t$binary does exist.\n"
     else
-      echo "The user: $binary does not exist. Creating user: $binary !"
+      echo -e "The user:\t$binary does not exist. Creating user:\t$binary\n"
       useradd --no-create-home --shell /bin/false $binary
   fi
   echo -e "\nInstalling ${binary}!\n"
-  cd /opt/
-  wget -v https://dl.${binary}.com/oss/release/${binary}-${version}.${osarch}.tar.gz
+  wget -v -O /tmp/${binary}.tar.gz https://dl.${binary}.com/oss/release/${binary}-${version}.${osarch}.tar.gz
   if [ -d "/opt/$binary" ];
   then
-    echo -e "\nDirectory: /opt/$binary exists. About to remove it.\n"
+    echo -e "\nDirectory:\t/opt/$binary exists. About to remove it.\n"
     rm -rfv /opt/$binary
   else
-    echo -e "\nDirectory: /opt/$binary doesn't exist. Creating /opt/$binary !\n"
+    echo -e "\nDirectory:\t/opt/$binary doesn't exist. Creating:\t/opt/$binary\n"
     mkdir -pv /opt/$binary
   fi
-  tar -xzf ${binary}-${version}.${osarch}.tar.gz -C /opt/$binary --strip-components=1 && rm -r ${binary}-${version}.${osarch}.tar.gz
-  cd /opt/${binary}
+  tar -xzf /tmp/${binary}.tar.gz -C /opt/$binary --strip-components=1
+  echo -e "\nRemoving:\t/tmp/${binary}.tar.gz" && rm -rv /tmp/${binary}.tar.gz
   mkdir -pv /var/log/${binary} /var/lib/${binary}
   cat <<EOF >/opt/${binary}/conf/${binary}.ini
 ##################### Grafana Configuration Defaults #####################
@@ -699,9 +698,8 @@ WantedBy=multi-user.target
 EOF
   echo -e "\nPerforming systemctl daemon reload."
   systemctl daemon-reload
-  echo -e "\nEnabling systemctl service for ${binary}."
+  echo -e "\nEnabling systemctl service for:\t${binary}"
   systemctl enable ${binary}.service
-  echo -e "\nStarting systemctl service for ${binary}.\n"
+  echo -e "\nStarting systemctl service for:\t${binary}"
   systemctl start ${binary}.service
-  echo -e "\n"
 fi
