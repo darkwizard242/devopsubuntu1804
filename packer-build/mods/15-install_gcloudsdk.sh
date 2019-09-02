@@ -1,5 +1,6 @@
-#!/bin/bash -eu
+#!/bin/bash -e
 
+# Shellcheck fixes for: SC2181
 
 sdk_rel="cloud-sdk-$(lsb_release -cs)"
 
@@ -15,11 +16,10 @@ apt-get update -y
 
 ## Installing Google Cloud SDK
 package="google-cloud-sdk"
-dpkg -s $package &> /dev/null && echo -e
-if [ $? -eq 0 ];
+if dpkg -s $package &> /dev/null;
   then
-    echo "$package is already available and installed within the system." && echo -e
+    echo -e "\n$package is already available and installed within the system.\n"
   else
-    echo -e "\nAbout to install $package."
+    echo -e "\nAbout to install:\t$package.\n"
     DEBIAN_FRONTEND=non-interactive apt-get install $package -y
 fi
