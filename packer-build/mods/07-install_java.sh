@@ -1,15 +1,16 @@
-#!/bin/bash -eu
+#!/bin/bash -e
+
+# Shellcheck fixes for: SC2086, SC2181
 
 packages="openjdk-8-jdk"
 
 for package in $packages;
 do
-  dpkg -s $package &> /dev/null && echo -e
-  if [ $? -eq 0 ];
+  if dpkg -s $package &> /dev/null;
     then
-      echo "$package is already available and installed within the system" && echo -e
+      echo -e "\n$package is already available and installed within the system.\n"
     else
-      echo "About to install $package" && echo -e
+      echo -e "\nAbout to install:\t$package\n"
       DEBIAN_FRONTEND=non-interactive apt-get install $package -y
   fi
 done
