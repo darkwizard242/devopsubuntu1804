@@ -1,8 +1,9 @@
-#!/bin/bash -eu
+#!/bin/bash -e
 
+# Shellcheck fixes for: SC2181, SC2028, SC2006
 
 ms_key="https://packages.microsoft.com/keys/microsoft.asc"
-azure_rel=`lsb_release -cs`
+azure_rel=$(lsb_release -cs)
 azure_repo="https://packages.microsoft.com/repos/azure-cli"
 
 ## Installing packages required for Azure CLI (commandline interface)
@@ -10,13 +11,12 @@ dependencies="curl apt-transport-https lsb-release gnupg"
 
 for dependency in $dependencies;
 do
-  dpkg -s $dependency &> /dev/null && echo -e
-  if [ $? -eq 0 ];
+  if dpkg -s "$dependency" &> /dev/null;
     then
       echo -e "\n$dependency is already available and installed within the system.\n"
     else
-      echo -e "\nAbout to install $dependency.\n"
-      DEBIAN_FRONTEND=non-interactive apt-get install $dependency -y
+      echo -e "\nAbout to install:\t$dependency.\n"
+      DEBIAN_FRONTEND=non-interactive apt-get install "$dependency" -y
   fi
 done
 
@@ -31,11 +31,10 @@ apt-get update -y
 
 ## Installing Azure CLI
 package="azure-cli"
-dpkg -s $package &> /dev/null && echo -e
-if [ $? -eq 0 ];
+if dpkg -s $package &> /dev/null;
   then
-    echo "$package is already available and installed within the system." && echo -e
+    echo -e "\n$package is already available and installed within the system.\n"
   else
-    echo -e "\nAbout to install $package."
+    echo -e "\nAbout to install:\t$package."
     DEBIAN_FRONTEND=non-interactive apt-get install $package -y
 fi
