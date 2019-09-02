@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Shellcheck fixes for: SC2002, SC2006
 
 # Setting ANSI colors
 lightred='\033[0;91m'
@@ -10,23 +11,23 @@ normal='\033[0m'
 underline='\033[4m'
 
 # System variables/values set up.
-fqdn=`hostname -f`
-ip=`hostname -I | awk '{ print $1 }'`
-running_procs=`ps aux | wc -l`
+fqdn=$(hostname -f)
+ip=$(hostname -I | awk '{ print $1 }')
+running_procs=$(ps aux | wc -l)
 # cur_user=`whoami`
-cur_time=`date | awk '{ print $4,$5 }'`
-cur_date=`date | awk '{ print $3,$2,$6 }'`
-bash_ver=`bash --version | awk 'NR==1 { print $4}'`
-kernel_ver=`uname -r`
-cpu_info=`cat /proc/cpuinfo | awk 'NR==5 { print $4,$5,$6,$7,$8,$9 }'`
-mem_stats=`free -m | awk 'NR==2 { print $3 "MBs (free)", "/" , $2 "MBs (total)"  }'`
-total_packages=`dpkg-query -l | wc -l`
-total_uptime=`uptime -p | awk '{ print $2,$3,$4,$5}'`
+cur_time=$(date | awk '{ print $4,$5 }')
+cur_date=$(date | awk '{ print $3,$2,$6 }')
+bash_ver=$(bash --version | awk 'NR==1 { print $4}')
+kernel_ver=$(uname -r)
+cpu_info=$(less /proc/cpuinfo | awk 'NR==5 { print $4,$5,$6,$7,$8,$9 }')
+mem_stats=$(free -m | awk 'NR==2 { print $3 "MBs (free)", "/" , $2 "MBs (total)"  }')
+total_packages=$(dpkg-query -l | wc -l)_
+total_uptime=$(uptime -p | awk '{ print $2,$3,$4,$5}')
 
 
 echo -e "\n\t $bold$underline System Information: $normal \n"
 echo -e "$lightred FQDN is: $lightgreen$fqdn"
-echo -e "$lightred Hostname is: $lightgreen `hostname`"
+echo -e "$lightred Hostname is: $lightgreen $(hostname)"
 echo -e "$lightred IP is: $lightgreen$ip"
 echo -e "$lightred Shell Version: $lightgreen$bash_ver"
 echo -e "$lightred Kernel Version: $lightgreen$kernel_ver"
@@ -41,19 +42,19 @@ echo -e "$lightred Up Since: $lightgreen$total_uptime\n $no_color"
 
 
 # DevOps variables/values set up.
-jenkins_ver=`java -jar /usr/share/jenkins/jenkins.war --version`
-terraform_ver=`terraform --version | awk 'NR==1 { print $2 }'`
-ansible_ver=`sudo ansible --version | awk 'NR==1 { print $2}'`
-docker_ver=`docker --version | awk '{ print $3,$4,$5}'`
-awscli_ver=`aws --version`
-azurecli_ver=`az --version | awk 'NR==1 {print $2 }'`
-gcloud_ver=`gcloud --version | awk 'NR==1 { print $4}'`
-python3_ver=`python3 --version | awk '{ print $2 }'`
-pip3_ver=`python3 -m pip --version | awk '{ print $2 }'`
-ruby_ver=`ruby --version | awk '{ print $2 }'`
-git_ver=`git --version | awk '{ print $3 }'`
-svn_ver=`svn --version | awk 'NR==1 { print $3,$4 }'`
-grafanaserver_ver=`grafana-server -v | awk 'NR==1{print $2}'`
+jenkins_ver=$(java -jar /usr/share/jenkins/jenkins.war --version)
+terraform_ver=$(terraform --version | awk 'NR==1 { print $2 }')
+ansible_ver=$(sudo ansible --version | awk 'NR==1 { print $2}')
+docker_ver=$(docker --version | awk '{ print $3,$4,$5}')
+awscli_ver=$(aws --version)
+azurecli_ver=$(az --version | awk 'NR==1 {print $2 }')
+gcloud_ver=$(gcloud --version | awk 'NR==1 { print $4}')
+python3_ver=$(python3 --version | awk '{ print $2 }')
+pip3_ver=$(python3 -m pip --version | awk '{ print $2 }')
+ruby_ver=$(ruby --version | awk '{ print $2 }')
+git_ver=$(git --version | awk '{ print $3 }')
+svn_ver=$(svn --version | awk 'NR==1 { print $3,$4 }')
+grafanaserver_ver=$(grafana-server -v | awk 'NR==1{print $2}')
 
 echo -e "\n\t $bold$underline DevOps Toolstack: $normal \n"
 echo -e "$lightred Jenkins Version:\t $lightgreen$jenkins_ver"
