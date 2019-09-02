@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Shellcheck fixes for: SC2181, SC2164
 
 dependencies="wget tar git"
 servername=$(hostname -f)
@@ -13,12 +14,11 @@ binaryport="3005"
 ## Installing packages required for $binary
 for dependency in $dependencies;
 do
-  dpkg -s "$dependency" &> /dev/null && echo -e
-  if [ $? -eq 0 ];
+  if dpkg -s "$dependency" &> /dev/null;
     then
-      echo "$dependency is already available and installed within the system." && echo -e
+      echo -e "\n$dependency is already available and installed within the system."
     else
-      echo "About to install $dependency." && echo -e
+      echo -e "\nAbout to install:\t$dependency."
       DEBIAN_FRONTEND=non-interactive apt-get install "$dependency" -y
   fi
 done
@@ -29,37 +29,35 @@ done
 
 if [ -e /opt/${binary}/${binary} ]
 then
-  echo "${binary} binary currently exists in /opt/${binary}/ !"
+  echo -e "${binary} currently exists in:\t/opt/${binary}/"
 else
-  id $binary &> /dev/null && echo -e
-  if [ $? -eq 0 ];
+  if id $binary &> /dev/null;
     then
-      echo "The user: $binary does exist." && echo -e
+      echo -e "\nThe user:\t$binary does exist."
     else
-      echo "The user: $binary does not exist. Creating user: $binary !"
+      echo -e "\nThe user:\t$binary does not exist. Creating user:\t$binary"
       useradd --no-create-home --shell /bin/false $binary
   fi
-  echo -e "\nInstalling ${binary}!\n"
-  cd /opt/
-  wget -v https://dl.${binary}.io/${version}/${binary}_${version}_${osarch}.tar.gz
+  echo -e "\nInstalling:\t${binary}!\n"
+  wget -v -O /tmp/${binary}.tar.gz https://dl.${binary}.io/${version}/${binary}_${version}_${osarch}.tar.gz
   if [ -d "$pathtobinary" ];
   then
-    echo -e "\nDirectory: $pathtobinary exists. About to remove it.\n"
+    echo -e "\nDirectory:\t$pathtobinary exists. About to remove it.\n"
     rm -rfv "$pathtobinary"
   else
-    echo -e "\nDirectory: $pathtobinary doesn't exist. Creating $pathtobinary !\n"
+    echo -e "\nDirectory:\t$pathtobinary doesn't exist. Creating:\t$pathtobinary\n"
     mkdir -pv "$pathtobinary"
   fi
   if [ -d "$pathtobinaryrepos" ];
   then
-    echo -e "\nDirectory: $pathtobinaryrepos exists. About to remove it.\n"
+    echo -e "\nDirectory:\t$pathtobinaryrepos exists. About to remove it.\n"
     rm -rfv "$pathtobinaryrepos"
   else
-    echo -e "\nDirectory: $pathtobinary doesn't exist. Creating $pathtobinaryrepos !\n"
+    echo -e "\nDirectory:\t$pathtobinary doesn't exist. Creating:\t$pathtobinaryrepos\n"
     mkdir -pv "$pathtobinaryrepos"
   fi
-  tar -xzf ${binary}_${version}_${osarch}.tar.gz -C "$pathtobinary" --strip-components=1 && rm -r ${binary}_${version}_${osarch}.tar.gz
-  cd "$pathtobinary"
+  tar -xzf /tmp/${binary}.tar.gz -C "$pathtobinary" --strip-components=1
+  echo -e "\nRemoving:\t/tmp/${binary}.tar.gz" && rm -rv /tmp/${binary}.tar.gz
   mkdir -pv "$pathtobinary"/custom/conf/
   cat <<EOF >"$pathtobinary"/custom/conf/app.ini
 PP_NAME = Repository Manager
@@ -147,9 +145,8 @@ NoNewPrivileges=true
 EOF
   echo -e "\nPerforming systemctl daemon reload."
   systemctl daemon-reload
-  echo -e "\nEnabling systemctl service for ${binary}."
+  echo -e "\nEnabling systemctl service for:\t${binary}"
   systemctl enable ${binary}.service
-  echo -e "\nStarting systemctl service for ${binary}.\n"
+  echo -e "\nStarting systemctl service for:\t${binary}"
   systemctl start ${binary}.service
-  echo -e "\n"
 fi
