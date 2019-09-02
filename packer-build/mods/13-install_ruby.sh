@@ -1,27 +1,27 @@
-#!/bin/bash -eu
+#!/bin/bash -e
+
+# Shellcheck fixes for: SC2181, SC2028
 
 ## Install Ruby
 packages="ruby"
 
 for package in $packages;
 do
-  dpkg -s $package &> /dev/null && echo -e
-  if [ $? -eq 0 ];
+  if dpkg -s $package &> /dev/null;
     then
-      echo "$package is already available and installed within the system" && echo -e
+      echo -e "\n$package is already available and installed within the system.\n"
     else
-      echo "About to install $package" && echo -e
+      echo -e "\nAbout to install:\t$package\n"
       DEBIAN_FRONTEND=non-interactive apt-get install $package -y
   fi
 done
 
 ## Install ServerSpec
 gems_to_install="serverspec"
-ruby --version
-if [ $? -eq 0 ];
+if which ruby;
 then
-  echo "Installing $gems_to_install" 
+  echo -e "\nInstalling ruby gem: $gems_to_install.\n" 
   gem install $gems_to_install
 else
-  echo "Ruby is not installed."
+  echo -e "\nRuby is not installed.\n"
 fi
