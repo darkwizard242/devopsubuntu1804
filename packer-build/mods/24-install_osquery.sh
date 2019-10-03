@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
+# Shellcheck fixes for: SC2034
 
 # SETTING VARIABLES
 dependencies="curl wget jq"
-servername=$(hostname -f)
 binary="osquery"
 binaryinteractive="osqueryi"
 binaryservice="osqueryd"
