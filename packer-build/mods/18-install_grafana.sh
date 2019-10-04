@@ -19,7 +19,7 @@ done
 
 ## Download Grafana and extract binary to /usr/local/bin
 binary="grafana"
-version="6.2.2"
+version="6.4.1"
 osarch="linux-amd64"
 if [ -e /opt/grafana/bin/grafana-server ]
 then
