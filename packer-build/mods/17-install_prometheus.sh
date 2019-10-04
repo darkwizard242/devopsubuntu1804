@@ -19,7 +19,7 @@ done
 
 ## Download Prometheus and extract binary to /usr/local/bin/
 binary="prometheus"
-version="2.10.0"
+version="2.13.0"
 osarch="linux-amd64"
 extract_path="/usr/local/bin"
 if [ -e $extract_path/$binary ]
