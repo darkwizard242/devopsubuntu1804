@@ -19,7 +19,7 @@ done
 
 ## Download Terraform and extract binary to /usr/local/bin/
 binary="terraform"
-version="0.12.7"
+version="0.12.9"
 osarch="linux_amd64"
 extract_path="/usr/local/bin"
 if [ -e $extract_path/$binary ]
