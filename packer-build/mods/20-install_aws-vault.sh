@@ -23,13 +23,13 @@ version="4.6.2"
 osarch="linux-amd64"
 if [ -e /usr/local/bin/aws-vault ]
 then
-  ver_existing=$(binary --version)
+  ver_existing=$(${binary} --version)
   echo -e "\n$binary currently exists in:\t/usr/local/bin/"
   echo -e "\nCurrently available version is:\t$ver_existing"
 else
   curl -L -o /usr/local/bin/aws-vault https://github.com/99designs/${binary}/releases/download/v${version}/${binary}-${osarch}
   echo -e "\n\nexport AWS_VAULT_BACKEND=\"file\"" >> .bashrc
   chmod -v 0755 /usr/local/bin/${binary}
-  ver_fresh=$(binary --version)
+  ver_fresh=$(${binary} --version)
   echo -e "\nInstalled version is:\t$ver_fresh"
 fi
