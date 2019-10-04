@@ -19,7 +19,7 @@ done
 
 ## Download AlertManager to support alertmanager and extract binary to /bin/
 binary="alertmanager"
-version="0.17.0"
+version="0.19.0"
 osarch="linux-amd64"
 extract_path="/usr/local/bin"
 if [ -e $extract_path/$binary ]
