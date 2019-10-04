@@ -73,6 +73,8 @@ fi
 
 # 4. Fetch data in json format and parse to jq. SELECT STATEMENT to retrieve data for all columns against etc_hosts:
 # SQL QUERY: osqueryi --json "SELECT * FROM etc_hosts" | jq
+# Extract only values for address key in raw output using jq:
+# SQL QUERY: osqueryi --json "SELECT * FROM etc_hosts" | jq -r '.[] | .address'
 
 
 # 5. Fetch data in json format and parse to jq. SELECT STATEMENT to retrieve data all columns against deb_packages table name of package is equal to osquery:
