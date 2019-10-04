@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-## Check if terraform binary exists in /bin/ and it's permissions
-describe file('/bin/terraform'), :if => os[:family] == 'ubuntu' do
+## Check if terraform binary exists in /usr/local/bin and it's permissions
+describe file('/usr/local/bin/terraform'), :if => os[:family] == 'ubuntu' do
   it { should exist }
   it { should be_file }
   it { should be_owned_by 'root' }
