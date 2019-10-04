@@ -19,7 +19,7 @@ done
 
 ## Download aws-vault and extract binary to /bin/
 binary="aws-vault"
-version="4.6.2"
+version="4.6.4"
 osarch="linux-amd64"
 if [ -e /usr/local/bin/aws-vault ]
 then
