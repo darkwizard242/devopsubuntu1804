@@ -19,7 +19,7 @@ done
 
 ## Download Hugo and extract binary to /usr/local/bin/
 binary="hugo"
-version="0.56.0"
+version="0.58.3"
 osarch="Linux-64bit"
 extract_path="/usr/local/bin"
 if [ -e $extract_path/$binary ]
@@ -33,4 +33,3 @@ else
   ver_fresh=$(binary version | awk '{print $5}')
   echo -e "\nInstalled version of ${binary} is:\t$ver_fresh\n"
 fi
-
