@@ -19,7 +19,7 @@ end
 ## Check if terraform binary command exists with a successful exit code.
 if os[:family] == 'ubuntu'
   if os[:release] == '18.04'
-    describe command('terraform --version'), :if => os[:family] == 'ubuntu' do
+    describe command('terraform --version') do
       its(:exit_status) { should eq 0 }
     end
   end
