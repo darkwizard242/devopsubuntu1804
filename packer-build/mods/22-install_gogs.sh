@@ -117,8 +117,8 @@ EOF
   cat <<EOF >/etc/systemd/system/${binary}.service
 [Unit]
 Description=Gogs
-After=syslog.target
-After=network.target
+Wants=network-online.target
+After=network-online.target
 # After=mariadb.service mysqld.service postgresql.service memcached.service redis.service
 
 [Service]
@@ -142,6 +142,9 @@ ProtectSystem=full
 PrivateDevices=yes
 PrivateTmp=yes
 NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
 EOF
   echo -e "\nPerforming systemctl daemon reload."
   systemctl daemon-reload
