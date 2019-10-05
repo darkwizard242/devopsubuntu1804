@@ -103,7 +103,7 @@
     ],
     "post-processors": [{
       "type": "vagrant",
-      "compression_level": "8",
+      "compression_level": "9",
       "output": "output/devopsubuntu1804.box"
     }]
   }
