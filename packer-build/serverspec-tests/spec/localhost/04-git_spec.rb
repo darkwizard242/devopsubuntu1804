@@ -1,10 +1,18 @@
 require 'spec_helper'
 
-describe package('git'), :if => os[:family] == 'ubuntu' do
-  it { should be_installed }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe package('git') do
+      it { should be_installed }
+    end
+  end
 end
 
 ## Check if git command exits with a successful exit code.
-describe command('git --version'), :if => os[:family] == 'ubuntu' do
-  its(:exit_status) { should eq 0 }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe command('git --version') do
+      its(:exit_status) { should eq 0 }
+    end
+  end
 end
