@@ -1,0 +1,108 @@
+{
+    "builders": [
+        {
+            "type": "virtualbox-iso",
+            "boot_command": [
+                "<esc><wait>",
+                "<esc><wait>",
+                "<enter><wait>",
+                "/install/vmlinuz<wait>",
+                " auto<wait>",
+                " console-setup/ask_detect=false<wait>",
+                " console-setup/layoutcode=us<wait>",
+                " console-setup/modelcode=pc105<wait>",
+                " debconf/frontend=noninteractive<wait>",
+                " debian-installer=en_US<wait>",
+                " fb=false<wait>",
+                " initrd=/install/initrd.gz<wait>",
+                " kbd-chooser/method=us<wait>",
+                " keyboard-configuration/layout=USA<wait>",
+                " keyboard-configuration/variant=USA<wait>",
+                " locale=en_US<wait>",
+                " netcfg/get_domain=ubuntu1804.com<wait>",
+                " netcfg/get_hostname=devops<wait>",
+                " grub-installer/bootdev=/dev/sda<wait>",
+                " noapic<wait>",
+                " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
+                " -- <wait>",
+                "<enter><wait>"
+            ],
+            "boot_wait": "10s",
+            "disk_size": 40960,
+            "guest_os_type": "Ubuntu_64",
+            "headless": true,
+            "http_directory": "http",
+            "iso_urls": [
+                "http://cdimage.ubuntu.com/releases/18.04.3/release/ubuntu-18.04.3-server-amd64.iso"
+            ],
+            "iso_checksum_type": "sha256",
+            "iso_checksum": "7d8e0055d663bffa27c1718685085626cb59346e7626ba3d3f476322271f573e",
+            "ssh_username": "vagrant",
+            "ssh_password": "password",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "12000s",
+            "shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
+            "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+            "virtualbox_version_file": ".vbox_version",
+            "vm_name": "devopsubuntu1804",
+            "vboxmanage": [
+            ["modifyvm", "{{.Name}}", "--memory", "2560"],
+            ["modifyvm", "{{.Name}}", "--cpus", "2"]
+            ]
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "mods/00-devops",
+            "destination": "/home/vagrant/"
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+            "scripts": [
+                "mods/01-init.sh",
+                "mods/02-vagrant_init.sh",
+                "mods/03-groups-users-creation.sh",
+                "mods/04-install_git.sh",
+                "mods/05-install_python3_pip3.sh",
+                "mods/06-install_ansible.sh",
+                "mods/07-install_java.sh",
+                "mods/08-install_jenkins.sh",
+                "mods/09-install_terraform.sh",
+                "mods/10-install_docker.sh",
+                "mods/11-install_awscli.sh",
+                "mods/12-install_subversion.sh",
+                "mods/13-install_ruby.sh",
+                "mods/14-install_azurecli.sh",
+                "mods/15-install_gcloudsdk.sh",
+                "mods/16-install_node_exporter.sh",
+                "mods/17-install_prometheus.sh",
+                "mods/18-install_grafana.sh",
+                "mods/19-install_alertmanager.sh",
+                "mods/20-install_aws-vault.sh",
+                "mods/21-install_hugo.sh",
+                "mods/22-install_gogs.sh",
+                "mods/23-install_go.sh",
+                "mods/24-install_osquery.sh"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "serverspec-tests",
+            "destination": "/home/vagrant/"
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+            "scripts": [
+                "mods/cleanup.sh"
+            ]
+        }
+    ],
+    "post-processors": [{
+      "type": "vagrant",
+      "compression_level": "8",
+      "output": "output/devopsubuntu1804.box"
+    }]
+  }
