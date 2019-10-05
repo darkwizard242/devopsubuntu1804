@@ -112,7 +112,7 @@ INSTALL_LOCK = true
 SECRET_KEY   = JPOSWwnjJZ8wmgo
 EOF
   echo -e "\nAssigning ownership of $pathtobinary\n"
-  chown -Rv ${binary}:${binary} "$pathtobinary"
+  chown -R ${binary}:${binary} "$pathtobinary"
   echo -e "\nCreating service for ${binary}"
   cat <<EOF >/etc/systemd/system/${binary}.service
 [Unit]
