@@ -1,25 +1,45 @@
 require 'spec_helper'
 
 
-describe file('/etc/apt/sources.list'), :if => os[:family] == 'ubuntu' do
-  it { should be_file }
-  it { should contain 'deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable' }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe file('/etc/apt/sources.list.d/docker.list') do
+      it { should be_file }
+      it { should contain 'deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable' }
+    end
+  end
 end
 
-describe package('docker-ce'), :if => os[:family] == 'ubuntu' do
-  it { should be_installed }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe package('docker-ce') do
+      it { should be_installed }
+    end
+  end
 end
 
-describe service('docker'), :if => os[:family] == 'ubuntu' do
-  it { should be_enabled }
-  it { should be_running }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe service('docker') do
+      it { should be_enabled }
+      it { should be_running }
+    end
+  end
 end
 
-describe file('/var/run/docker.sock'), :if => os[:family] == 'ubuntu' do
-  it { should be_socket }
-  it { should be_owned_by 'root' }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe file('/var/run/docker.sock') do
+      it { should be_socket }
+      it { should be_owned_by 'root' }
+    end
+  end
 end
 
-describe command('docker --version'), :if => os[:family] == 'ubuntu' do
-  its(:exit_status) { should eq 0 }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe command('docker --version') do
+      its(:exit_status) { should eq 0 }
+    end
+  end
 end
