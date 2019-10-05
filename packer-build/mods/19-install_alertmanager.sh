@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # Shellcheck fixes for: SC2181, SC2086, SC2164, SC2028, SC2034, SC2161
 
