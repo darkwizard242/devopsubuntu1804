@@ -3,7 +3,7 @@ require 'spec_helper'
 ## Check if desired motd file exists.
 if os[:family] == 'ubuntu'
   if os[:release] == '18.04'
-    describe file('/etc/update-motd.d/00-devops'), :if => os[:family] == 'ubuntu' do
+    describe file('/etc/update-motd.d/00-devops') do
       it { should exist }
       it { should be_file }
       it { should be_owned_by 'root' }
