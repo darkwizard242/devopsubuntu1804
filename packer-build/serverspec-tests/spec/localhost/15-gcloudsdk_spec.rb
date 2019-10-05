@@ -1,19 +1,35 @@
 require 'spec_helper'
 
 
-describe file('/etc/apt/sources.list.d/google-cloud-sdk.list'), :if => os[:family] == 'ubuntu' do
-  it { should be_file }
-  it { should contain 'deb http://packages.cloud.google.com/apt cloud-sdk-bionic main' }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe file('/etc/apt/sources.list.d/google-cloud-sdk.list') do
+      it { should be_file }
+      it { should contain 'deb http://packages.cloud.google.com/apt cloud-sdk-bionic main' }
+    end
+  end
 end
 
-describe package('google-cloud-sdk'), :if => os[:family] == 'ubuntu' do
-  it { should be_installed }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe package('google-cloud-sdk') do
+      it { should be_installed }
+    end
+  end
 end
 
-describe file('/usr/bin/gcloud'), :if => os[:family] == 'ubuntu' do
-  it { should be_file }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe file('/usr/bin/gcloud') do
+      it { should be_file }
+    end
+  end
 end
 
-describe command('gcloud --version'), :if => os[:family] == 'ubuntu' do
-  its(:exit_status) { should eq 0 }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe command('gcloud --version') do
+      its(:exit_status) { should eq 0 }
+    end
+  end
 end
