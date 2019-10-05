@@ -1,45 +1,77 @@
 require 'spec_helper'
 
-describe service('grafana'), :if => os[:family] == 'ubuntu' do
-  it { should be_enabled }
-  it { should be_running.under('systemd') }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe service('grafana') do
+      it { should be_enabled }
+      it { should be_running.under('systemd') }
+    end
+  end
 end
 
-describe port(3000), :if => os[:family] == 'ubuntu' do
-  it { should be_listening }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe port(3000) do
+      it { should be_listening }
+    end
+  end
 end
 
-describe user('grafana') do
-  it { should exist }
-  it { should have_login_shell '/bin/false' }
-  it { should belong_to_primary_group 'grafana' }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe user('grafana') do
+      it { should exist }
+      it { should have_login_shell '/bin/false' }
+      it { should belong_to_primary_group 'grafana' }
+    end
+  end
 end
 
-describe file('/opt/grafana/bin/grafana-server'), :if => os[:family] == 'ubuntu' do
-  it { should be_file }
-  it { should be_owned_by 'grafana' }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe file('/opt/grafana/bin/grafana-server') do
+      it { should be_file }
+      it { should be_owned_by 'grafana' }
+    end
+  end
 end
 
-describe file('/opt/grafana'), :if => os[:family] == 'ubuntu' do
-  it { should be_directory }
-  it { should be_owned_by 'grafana' }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe file('/opt/grafana') do
+      it { should be_directory }
+      it { should be_owned_by 'grafana' }
+    end
+  end
 end
 
-describe file('/var/lib/grafana'), :if => os[:family] == 'ubuntu' do
-  it { should be_directory }
-  it { should be_owned_by 'grafana' }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe file('/var/lib/grafana') do
+      it { should be_directory }
+      it { should be_owned_by 'grafana' }
+    end
+  end
 end
 
-describe file('/var/log/grafana'), :if => os[:family] == 'ubuntu' do
-  it { should be_directory }
-  it { should be_owned_by 'grafana' }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe file('/var/log/grafana') do
+      it { should be_directory }
+      it { should be_owned_by 'grafana' }
+    end
+  end
 end
 
-describe file('/opt/grafana/conf/grafana.ini'), :if => os[:family] == 'ubuntu' do
-  it { should be_file }
-  it { should be_owned_by 'grafana' }
-  it { should contain 'data = /var/lib/grafana' }
-  it { should contain 'logs = /var/log/grafana' }
-  it { should contain 'plugins = /opt/grafana/plugins' }
-  it { should contain 'provisioning = /opt/grafana/conf/provisioning' }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe file('/opt/grafana/conf/grafana.ini') do
+      it { should be_file }
+      it { should be_owned_by 'grafana' }
+      it { should contain 'data = /var/lib/grafana' }
+      it { should contain 'logs = /var/log/grafana' }
+      it { should contain 'plugins = /opt/grafana/plugins' }
+      it { should contain 'provisioning = /opt/grafana/conf/provisioning' }
+    end
+  end
 end
