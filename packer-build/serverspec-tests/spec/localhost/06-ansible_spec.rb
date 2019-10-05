@@ -1,14 +1,26 @@
 require 'spec_helper'
 
-describe ppa('ansible/ansible'), :if => os[:family] == 'ubuntu' do
-  it { should exist }
-  it { should be_enabled }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe ppa('ansible/ansible') do
+      it { should exist }
+      it { should be_enabled }
+    end
+  end
 end
 
-describe package('ansible'), :if => os[:family] == 'ubuntu' do
-  it { should be_installed }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe package('ansible') do
+      it { should be_installed }
+    end
+  end
 end
 
-describe command('ansible --version'), :if => os[:family] == 'ubuntu' do
-  its(:exit_status) { should eq 0 }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe command('ansible --version') do
+      its(:exit_status) { should eq 0 }
+    end
+  end
 end
