@@ -30,6 +30,6 @@ then
 else
   wget -v -O /tmp/${binary}.tar.gz https://github.com/gohugoio/${binary}/releases/download/v${version}/${binary}_${version}_${osarch}.tar.gz
   tar -zxf /tmp/${binary}.tar.gz -C /usr/local/bin ${binary} && rm -rv /tmp/${binary}.tar.gz
-  ver_fresh=$(binary version | awk '{print $5}')
+  ver_fresh=$(${binary} version | awk '{print $5}')
   echo -e "\nInstalled version of ${binary} is:\t$ver_fresh\n"
 fi
