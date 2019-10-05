@@ -1,5 +1,9 @@
 require 'spec_helper'
 
-describe command('aws --version'), :if => os[:family] == 'ubuntu' do
-  its(:exit_status) { should eq 0 }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe command('aws --version') do
+      its(:exit_status) { should eq 0 }
+    end
+  end
 end
