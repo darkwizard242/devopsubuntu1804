@@ -1,13 +1,25 @@
 require 'spec_helper'
 
-describe package('ruby'), :if => os[:family] == 'ubuntu' do
-  it { should be_installed }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe package('ruby') do
+      it { should be_installed }
+    end
+  end
 end
 
-describe command('ruby --version'), :if => os[:family] == 'ubuntu' do
-  its(:exit_status) { should eq 0 }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe command('ruby --version') do
+      its(:exit_status) { should eq 0 }
+    end
+  end
 end
 
-describe package('serverspec'), :if => os[:family] == 'ubuntu' do
-  it { should be_installed.by('gem') }
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe package('serverspec') do
+      it { should be_installed.by('gem') }
+    end
+  end
 end
