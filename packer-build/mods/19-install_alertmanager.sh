@@ -46,7 +46,7 @@ else
     mkdir -pv /opt/$binary
   fi
   echo -e "\nExtracting: /tmp/${binary}.tar.gz \t to:\t /opt/$binary"
-  tar -xzf /tmp/${binary}.tar.gz -C /opt/$binary --strip-components=1--strip-components=1
+  tar -xzf /tmp/${binary}.tar.gz -C /opt/$binary --strip-components=1
   echo -e "\nRemoving:\t/tmp/${binary}.tar.gz" && rm -rv /tmp/${binary}.tar.gz
   echo -e "\nMoving binary files to $extract_path\n"
   mv -v /opt/${binary}/${binary} /opt/${binary}/amtool $extract_path
