@@ -24,7 +24,39 @@ if os[:family] == 'ubuntu'
     end
     describe file('/var/lib/jenkins') do
       it { should be_directory }
+      it { should be_readable }
+      it { should be_executable }
+      it { should be_writable.by_user('jenkins') }
       it { should be_owned_by 'jenkins' }
+      it { should be_mode 755 }
+    end
+    describe file('/usr/share/jenkins') do
+      it { should exist }
+      it { should be_directory }
+      it { should be_readable }
+      it { should be_executable }
+      it { should be_writable.by_user('root') }
+      it { should be_mode 755 }
+    end
+    describe file('/usr/share/jenkins/jenkins.war') do
+      it { should exist }
+      it { should be_file }
+      it { should be_readable }
+      it { should be_writable.by_user('root') }
+      it { should be_mode 644 }
+    end
+    describe file('/var/lib/jenkins/secrets/initialAdminPassword') do
+      it { should exist }
+      it { should be_file }
+      it { should be_writable.by_user('jenkins') }
+      it { should be_readable.by_user('jenkins') }
+      it { should be_readable.by('group') }
+      it { should be_mode 640 }
+    end
+    describe process("java") do
+      it { should be_running }
+      its(:user) { should eq "jenkins" }
+      its(:args) { should match /\-jar\ \/usr\/share\/jenkins\/jenkins\.war/ }
     end
   end
 end
