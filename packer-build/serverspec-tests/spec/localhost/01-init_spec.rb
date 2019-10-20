@@ -214,3 +214,72 @@ if os[:family] == 'ubuntu'
     end
   end
 end
+
+
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe package('sysstat') do
+      it { should be_installed }
+    end
+    describe file('/usr/lib/sysstat') do
+      it { should exist }
+      it { should be_directory }
+      it { should be_executable }
+    end
+    describe file('/etc/sysstat') do
+      it { should exist }
+      it { should be_directory }
+      it { should be_readable }
+    end
+  end
+end
+
+
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe package('stress') do
+      it { should be_installed }
+    end
+    describe file('/usr/bin/stress') do
+      it { should exist }
+      it { should be_file }
+      it { should be_executable }
+    end
+    describe command('which stress') do
+      its(:exit_status) { should eq 0 }
+      its(:stdout) { should match /\/usr\/bin\/stress/ }
+    end
+  end
+end
+
+
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe package('shellcheck') do
+      it { should be_installed }
+    end
+    describe file('/usr/bin/shellcheck') do
+      it { should exist }
+      it { should be_file }
+      it { should be_executable }
+    end
+    describe command('which shellcheck') do
+      its(:exit_status) { should eq 0 }
+      its(:stdout) { should match /\/usr\/bin\/shellcheck/ }
+    end
+  end
+end
+
+
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe file('/etc/update-motd.d/00-devops') do
+      it { should exist }
+      it { should be_file }
+      it { should be_executable }
+      it { should be_readable }
+      it { should be_owned_by 'root' }
+      it { should be_writable.by_user('root') }
+    end
+  end
+end
