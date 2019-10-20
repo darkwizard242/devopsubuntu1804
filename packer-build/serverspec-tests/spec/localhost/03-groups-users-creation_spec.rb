@@ -39,7 +39,8 @@ if os[:family] == 'ubuntu'
   if os[:release] == '18.04'
     describe user('vagrant') do
       it { should exist }
-      it { should belong_to_group 'vagrant' }
+      it { should belong_to_group 'sudo' }
+      it { should belong_to_primary_group 'vagrant' }
       it { should have_home_directory '/home/vagrant' }
       it { should have_login_shell '/bin/bash' }
     end
