@@ -11,16 +11,15 @@ if os[:family] == 'ubuntu'
       it { should be_readable.by('group') }
       it { should be_executable.by_user('root') }
       it { should be_executable.by('group') }
+      it { should be_writable.by_user('root') }
+      it { should be_mode 755 }
     end
-  end
-end
-
-
-## Check if terraform binary command exists with a successful exit code.
-if os[:family] == 'ubuntu'
-  if os[:release] == '18.04'
     describe command('terraform --version') do
       its(:exit_status) { should eq 0 }
+    end
+    describe command('which terraform') do
+      its(:exit_status) { should eq 0 }
+      its(:stdout) { should match /\/usr\/local\/bin\/terraform/ }
     end
   end
 end
