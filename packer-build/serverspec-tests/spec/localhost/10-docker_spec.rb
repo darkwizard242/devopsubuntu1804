@@ -78,6 +78,11 @@ if os[:family] == 'ubuntu'
       it { should be_enabled }
       it { should be_running }
     end
+    describe file('/usr/bin/docker') do
+      it { should exist }
+      it { should be_file }
+      it { should be_executable }
+    end
     describe file('/var/lib/docker') do
       it { should exist }
       it { should be_directory }
