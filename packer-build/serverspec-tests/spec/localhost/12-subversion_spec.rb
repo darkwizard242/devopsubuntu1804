@@ -5,13 +5,12 @@ if os[:family] == 'ubuntu'
     describe package('subversion') do
       it { should be_installed }
     end
-  end
-end
-
-if os[:family] == 'ubuntu'
-  if os[:release] == '18.04'
     describe command('svn --version') do
       its(:exit_status) { should eq 0 }
+    end
+    describe command('which svn') do
+      its(:exit_status) { should eq 0 }
+      its(:stdout) { should match /\/usr\/bin\/svn/ }
     end
   end
 end
