@@ -5,5 +5,9 @@ if os[:family] == 'ubuntu'
     describe command('aws --version') do
       its(:exit_status) { should eq 0 }
     end
+    describe command('which aws') do
+      its(:exit_status) { should eq 0 }
+      its(:stdout) { should match /\/usr\/local\/bin\/aws/ }
+    end
   end
 end
