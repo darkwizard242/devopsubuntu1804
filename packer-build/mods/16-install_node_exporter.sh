@@ -62,7 +62,7 @@ After=network.target
 User=${binary}
 Group=${binary}
 Type=simple
-ExecStart=/$extract_path/${binary}
+ExecStart=${extract_path}/${binary}
 
 [Install]
 WantedBy=multi-user.target
