@@ -5,6 +5,11 @@ if os[:family] == 'ubuntu'
     describe package('subversion') do
       it { should be_installed }
     end
+    describe file('/usr/bin/svn') do
+      it { should exist }
+      it { should be_file }
+      it { should be_executable }
+    end
     describe command('svn --version') do
       its(:exit_status) { should eq 0 }
     end
