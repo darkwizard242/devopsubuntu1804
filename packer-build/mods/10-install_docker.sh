@@ -19,7 +19,7 @@ done
 
 ## Installing docker-ce
 system_rel=$(lsb_release -cs)
-package="docker-ce"
+package="docker-ce docker-ce-cli containerd.io"
 if dpkg -s $package &> /dev/null;
   then
     echo -e "\n$package is already available and installed within the system."
@@ -30,9 +30,9 @@ if dpkg -s $package &> /dev/null;
     echo -e "deb [arch=amd64] https://download.docker.com/linux/ubuntu $system_rel stable"  > /etc/apt/sources.list.d/docker.list
     DEBIAN_FRONTEND=non-interactive apt-get update
     DEBIAN_FRONTEND=non-interactive apt-get install $package -y
-    echo -e "\nEnabling and starting docker service." && systemctl enable docker && systemctl start docker
 fi
 
+echo -e "\nEnabling and starting docker service." && systemctl enable docker && systemctl start docker
 
 ## Verify if docker is working
 dockver=$(docker --version)
