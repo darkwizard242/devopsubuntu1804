@@ -69,6 +69,7 @@
                 "/home/vagrant/mods/05-python3.sh install",
                 "/home/vagrant/mods/05.1-pip3.sh install",
                 "/home/vagrant/mods/06-ansible.sh install",
+                "/home/vagrant/mods/07-java.sh install",
                 "/home/vagrant/mods/26-inspec.sh install"
             ]
         },
@@ -81,7 +82,6 @@
             "type": "shell",
             "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
             "scripts": [
-                "mods/07-install_java.sh",
                 "mods/08-install_jenkins.sh",
                 "mods/09-install_terraform.sh",
                 "mods/10-install_docker.sh",
