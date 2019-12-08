@@ -54,20 +54,33 @@
     "provisioners": [
         {
             "type": "file",
-            "source": "mods/00-devops",
+            "source": "mods",
             "destination": "/home/vagrant/"
         },
         {
             "type": "shell",
             "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+            "inline": [
+                "/home/vagrant/mods/01-init.sh",
+                "/home/vagrant/mods/02-vagrant_init.sh",
+                "/home/vagrant/mods/03-groups-users-creation.sh",
+                "/home/vagrant/mods/03.1-inspec.sh install",
+                "/home/vagrant/mods/04-git.sh install",
+                "/home/vagrant/mods/05-python3.sh install",
+                "/home/vagrant/mods/05.1-pip3.sh install",
+                "/home/vagrant/mods/06-ansible.sh install",
+                "/home/vagrant/mods/26-inspec.sh install"
+            ]
+        },
+        {
+             "type": "inspec",
+             "profile": "https://github.com/darkwizard242/inspec-git",
+             "user": "vagrant"
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
             "scripts": [
-                "mods/01-init.sh",
-                "mods/02-vagrant_init.sh",
-                "mods/03-groups-users-creation.sh",
-                "mods/04-git.sh",
-                "mods/05-python3.sh",
-                "mods/05.1-pip3.sh",
-                "mods/06-ansible.sh",
                 "mods/07-install_java.sh",
                 "mods/08-install_jenkins.sh",
                 "mods/09-install_terraform.sh",
