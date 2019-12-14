@@ -72,6 +72,7 @@
                 "/home/vagrant/mods/08-jenkins.sh install",
                 "/home/vagrant/mods/09-terraform.sh install",
                 "/home/vagrant/mods/10-docker.sh install",
+                "/home/vagrant/mods/11-awscli.sh install",
                 "/home/vagrant/mods/26-inspec.sh install",
                 "/home/vagrant/mods/27-trivy.sh install"
             ]
@@ -85,7 +86,6 @@
             "type": "shell",
             "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
             "scripts": [
-                "mods/11-install_awscli.sh",
                 "mods/12-install_subversion.sh",
                 "mods/13-install_ruby.sh",
                 "mods/14-install_azurecli.sh",
