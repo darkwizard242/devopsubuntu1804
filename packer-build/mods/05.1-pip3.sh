@@ -29,7 +29,7 @@ check_if_python3_installed () {
 }
 
 check_if_pip3_installed () {
-  if ${package2} --version &> /dev/null;
+  if ${package1} -m pip --version &> /dev/null;
     then
       echo -e "\nYES: ${package2} is IN an installed state within the system.\n"
       exit 0
@@ -44,7 +44,7 @@ pip3_installer () {
 
 pip3_upgrade () {
   check_if_python3_installed
-  if ${package2} --version &> /dev/null;
+  if dpkg -s ${package2} &> /dev/null;
     then
       echo -e "\nYES: ${package2} is IN an installed state within the system. Upgrade beginning for:\t${package2}.\n"
       ${package1} -m pip install -U pip
@@ -79,7 +79,7 @@ case "$1" in
     pip3_uninstaller
     ;;
   *)
-    echo -e $"\nUsage:\t $0 check\t\t : Checks if ${package2} is installed on the system."
+    echo -e $"\nUsage:\t $0 check\t\t\t : Checks if ${package2} is installed on the system."
     echo -e $"Usage:\t $0 install\t\t : For installing ${package2} from the system."
     echo -e $"Usage:\t $0 upgrade\t\t : For upgrading pip3 from the system."
     echo -e $"Usage:\t $0 uninstall\t\t : For uninstalling/purging ${package2} from the system.\n"
