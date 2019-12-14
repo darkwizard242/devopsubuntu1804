@@ -72,7 +72,8 @@
                 "/home/vagrant/mods/08-jenkins.sh install",
                 "/home/vagrant/mods/09-terraform.sh install",
                 "/home/vagrant/mods/10-docker.sh install",
-                "/home/vagrant/mods/26-inspec.sh install"
+                "/home/vagrant/mods/26-inspec.sh install",
+                "/home/vagrant/mods/27-trivy.sh install"
             ]
         },
         {
