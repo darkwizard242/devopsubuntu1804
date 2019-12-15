@@ -7,13 +7,14 @@ env:
   global:
     - INSPECT_SCRIPT_LOC: https://raw.githubusercontent.com/darkwizard242/devopsubuntu1804/v1.0/packer-build/mods/26-inspec.sh
     - BUILDER: packer
+    - BUILDER_VERSION: 1.4.5
     - PATH_TO_BUILDSCRIPT: packer-build
     - BUILDSCRIPT: devopsubuntu1804.json
 
 before_script:
   - sudo apt-get update
   - sudo apt-get install wget unzip -y
-  - wget -v -O $BUILDER.zip https://releases.hashicorp.com/$BUILDER/1.4.5/$BUILDER_1.4.5_linux_amd64.zip
+  - wget -v -O ${BUILDER}.zip https://releases.hashicorp.com/${BUILDER}/1.4.5/${BUILDER}_${BUILDER_VERSION}_linux_amd64.zip
   - unzip $BUILDER.tar.gz -d .
   - curl -fsSL $INSPECT_SCRIPT_LOC | sudo bash -s -- install
 
