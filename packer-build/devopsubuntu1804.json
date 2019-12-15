@@ -75,6 +75,7 @@
                 "/home/vagrant/mods/11-awscli.sh install",
                 "/home/vagrant/mods/12-subversion.sh install",
                 "/home/vagrant/mods/13-ruby.sh install",
+                "/home/vagrant/mods/14-azurecli.sh install",
                 "/home/vagrant/mods/26-inspec.sh install",
                 "/home/vagrant/mods/27-trivy.sh install",
                 "/home/vagrant/mods/28-serverspec.sh install"
@@ -89,7 +90,6 @@
             "type": "shell",
             "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
             "scripts": [
-                "mods/14-install_azurecli.sh",
                 "mods/15-install_gcloudsdk.sh",
                 "mods/16-install_node_exporter.sh",
                 "mods/17-install_prometheus.sh",

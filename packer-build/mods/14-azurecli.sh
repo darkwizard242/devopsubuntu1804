@@ -1,8 +1,13 @@
 #!/bin/bash -e
 
-dependencies="wget apt-transport-https gnupg lsb-release"
+# Shellcheck fixes for: SC2181, SC2028, SC2006
+
+dependencies="curl apt-transport-https lsb-release gnupg"
+ms_key="https://packages.microsoft.com/keys/microsoft.asc"
 system_rel=$(lsb_release -cs)
-package="trivy"
+azure_repo="https://packages.microsoft.com/repos/azure-cli"
+package="azure-cli"
+
 
 check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
@@ -30,59 +35,71 @@ setup_dependencies () {
   done
 }
 
-check_if_trivy_installed () {
-  if ${package} --version &> /dev/null;
+check_if_azure-cli_installed () {
+  if az --version &> /dev/null;
     then
       echo -e "\nYES: ${package} is IN an installed state within the system.\n"
+      azure-cli_verify
       exit 0
     else
       echo -e "\nNO: ${package} is NOT IN an installed state.\n"
   fi
 }
 
-add_trivy_repo () {
-  wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-  echo -e "\nCreating ${package} repo file.\n"
-  echo -e "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main"  > /etc/apt/sources.list.d/${package}.list
-  echo deb https://aquasecurity.github.io/trivy-repo/deb ${system_rel} main > /etc/apt/sources.list.d/${package}.list
+add_azure-cli_repo () {
+  echo -e "\nAdding Microsoft Key!"
+  curl -sL $ms_key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null
+  echo -e "\nAdding Azure Repo to apt list!"
+  echo -e "deb [arch=amd64] ${azure_repo} ${system_rel} main" > /etc/apt/sources.list.d/${package}.list
   DEBIAN_FRONTEND=non-interactive apt-get update
 }
 
-trivy_installer () {
+azure-cli_installer () {
   DEBIAN_FRONTEND=non-interactive apt-get install ${package} -y
 }
 
-remove_trivy_repo () {
-  rm -v /etc/apt/sources.list.d/${package}.list
-}
-
-trivy_uninstaller () {
+azure-cli_uninstaller () {
   DEBIAN_FRONTEND=non-interactive apt-get purge ${package} -y
 }
 
+remove_azure-cli_repo () {
+  rm -v /etc/apt/sources.list.d/${package}.list
+}
+
+azure-cli_verify () {
+  if az --help &> /dev/null;
+    then
+      echo -e "\nExit status for ${package} command returned back with a successful exit code.\n"
+    else
+      echo -e "\nThere was an issue with the execution of ${package} command.\n"
+      exit 2
+  fi
+}
 
 case "$1" in
   check)
     check_os
-    check_if_trivy_installed
+    check_if_azure-cli_installed
+    azure-cli_verify
     ;;
   install)
     check_os
     setup_dependencies
-    check_if_trivy_installed
+    check_if_azure-cli_installed
     echo -e "\nInstallation beginning for:\t${package}\n"
-    add_trivy_repo
-    trivy_installer
+    add_azure-cli_repo
+    azure-cli_installer
+    azure-cli_verify
     ;;
   uninstall)
     check_os
     echo -e "\nPurging beginning for:\t${package}\n"
-    trivy_uninstaller
-    remove_trivy_repo
+    azure-cli_uninstaller
+    remove_azure-cli_repo
     ;;
   *)
     echo -e $"\nUsage:\t $0 check\t\t : Checks if ${package} is installed on the system and operational."
     echo -e $"Usage:\t $0 install\t\t : For installing ${package} from the system."
-    echo -e $"Usage:\t $0 uninstall\t\t : For uninstalling/purging ${package} from the system.\n"
+    echo -e $"Usage:\t $0 uninstall\t : For uninstalling/purging ${package} from the system.\n"
     exit 1
 esac
