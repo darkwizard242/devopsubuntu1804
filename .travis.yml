@@ -5,12 +5,13 @@ dist: bionic
 
 env:
   - BUILDER=packer PATH_TO_BUILDSCRIPT=packer-build BUILDSCRIPT=devopsubuntu1804.json
+  - INSPECT_SCRIPT_LOC=https://raw.githubusercontent.com/darkwizard242/devopsubuntu1804/v1.0/packer-build/mods/26-inspec.sh
 
 before_script:
   - sudo apt-get update
+  - curl -fsSL $INSPECT_SCRIPT_LOC | sudo bash -s -- install
 
 script:
-
   - sudo $BUILDER --version
   - cd $PATH_TO_BUILDSCRIPT
   - sudo $BUILDER validate $BUILDSCRIPT
