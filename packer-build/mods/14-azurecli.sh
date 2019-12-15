@@ -39,7 +39,6 @@ check_if_azure-cli_installed () {
   if az --version &> /dev/null;
     then
       echo -e "\nYES: ${package} is IN an installed state within the system.\n"
-      azure-cli_verify
       exit 0
     else
       echo -e "\nNO: ${package} is NOT IN an installed state.\n"
