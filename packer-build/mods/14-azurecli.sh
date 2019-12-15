@@ -79,7 +79,6 @@ case "$1" in
   check)
     check_os
     check_if_azure-cli_installed
-    azure-cli_verify
     ;;
   install)
     check_os
