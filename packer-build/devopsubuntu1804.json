@@ -76,7 +76,8 @@
                 "/home/vagrant/mods/12-subversion.sh install",
                 "/home/vagrant/mods/13-ruby.sh install",
                 "/home/vagrant/mods/26-inspec.sh install",
-                "/home/vagrant/mods/27-trivy.sh install"
+                "/home/vagrant/mods/27-trivy.sh install",
+                "/home/vagrant/mods/28-serverspec.sh install"
             ]
         },
         {
