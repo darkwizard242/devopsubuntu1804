@@ -15,7 +15,7 @@ before_script:
   - sudo apt-get update
   - sudo apt-get upgrade -y
   - sudo apt-get install wget unzip -y
-  - wget -v -O ${BUILDER}.zip https://releases.hashicorp.com/${BUILDER}/1.4.5/${BUILDER}_${BUILDER_VERSION}_linux_amd64.zip
+  - wget -v -O ${BUILDER}.zip https://releases.hashicorp.com/${BUILDER}/${BUILDER_VERSION}/${BUILDER}_${BUILDER_VERSION}_linux_amd64.zip
   - unzip $BUILDER.zip -d .
   - curl -fsSL $INSPECT_SCRIPT_LOC | sudo bash -s -- install
 
