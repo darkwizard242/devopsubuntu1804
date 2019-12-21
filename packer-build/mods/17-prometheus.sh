@@ -116,66 +116,45 @@ check_if_prometheus_installed () {
   fi
 }
 
+prometheus_config_file_template () {
+  cat <<EOF >${config_path}/${package}.yml
+global:
+  scrape_interval:     5s
+  evaluation_interval: 5s
+
+# rule_files:
+#   - "rules.yml"
+
+# alerting:
+#   alertmanagers:
+#   - static_configs:
+#     - targets:
+#       - localhost:9093
+
+scrape_configs:
+# - job_name: 'node'
+#   static_configs:
+#   - targets: ['localhost:9100']
+- job_name: 'prometheus'
+  static_configs:
+  - targets: ['localhost:9090']
+# - job_name: 'alertmanager'
+#   static_configs:
+#   - targets: ['localhost:9093']
+
+EOF
+}
+
 create_prometheus_config_file () {
   if [ -f "${config_path}/${package}.yml" ];
     then
       echo -e "\nRemoving pre-existing ${package} config file:\t${config_path}/${package}.yml\n"
-      rm -rfv ${config_path}
+      rm -rfv ${config_path}/${package}.yml
       echo -e "\nCreating ${package} config file:\t${config_path}/${package}.yml\n"
-      cat <<EOF >${config_path}/${package}.yml
-global:
-  scrape_interval:     5s
-  evaluation_interval: 5s
-
-# rule_files:
-#   - "rules.yml"
-
-# alerting:
-#   alertmanagers:
-#   - static_configs:
-#     - targets:
-#       - localhost:9093
-
-scrape_configs:
-  # - job_name: 'node'
-  #   static_configs:
-  #   - targets: ['localhost:9100']
-  - job_name: 'prometheus'
-    static_configs:
-    - targets: ['localhost:9090']
-  # - job_name: 'alertmanager'
-  #   static_configs:
-  #   - targets: ['localhost:9093']
-
-EOF
+      prometheus_config_file_template
     else
       echo -e "\nCreating ${package} config file:\t${config_path}/${package}.yml\n"
-      cat <<EOF >${config_path}/${package}.yml
-global:
-  scrape_interval:     5s
-  evaluation_interval: 5s
-
-# rule_files:
-#   - "rules.yml"
-
-# alerting:
-#   alertmanagers:
-#   - static_configs:
-#     - targets:
-#       - localhost:9093
-
-scrape_configs:
-  # - job_name: 'node'
-  #   static_configs:
-  #   - targets: ['localhost:9100']
-  - job_name: 'prometheus'
-    static_configs:
-    - targets: ['localhost:9090']
-  # - job_name: 'alertmanager'
-  #   static_configs:
-  #   - targets: ['localhost:9093']
-
-EOF
+      prometheus_config_file_template
   fi
 }
 
