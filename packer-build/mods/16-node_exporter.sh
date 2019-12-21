@@ -260,7 +260,6 @@ case "$1" in
     echo -e "\nPurging beginning for:\t${package}\n"
     remove_node_exporter_user
     node_exporter_uninstaller
-    node_exporter_service_stop
     remove_node_exporter_service
     systemctl_daemon_reload
     ;;
