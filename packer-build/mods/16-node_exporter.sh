@@ -124,7 +124,8 @@ add_node_exporter_service () {
   cat <<EOF >/etc/systemd/system/${package}.service
 [Unit]
 Description=node_exporter - exporter for machine metrics.
-After=network.target
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 User=${package}
