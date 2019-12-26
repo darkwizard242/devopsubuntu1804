@@ -49,6 +49,6 @@ done
 # Disable all current motd's and only use custom motd.
 ls -altr /home/vagrant/
 chmod -v -x /etc/update-motd.d/*
-mv -v /home/vagrant/00-devops /etc/update-motd.d/ && ls -altr /etc/update-motd.d/
+mv -v /home/vagrant/mods/00-devops /etc/update-motd.d/ && ls -altr /etc/update-motd.d/
 chown -Rv root:root /etc/update-motd.d/00-devops
 chmod -v a+x /etc/update-motd.d/00-devops && ls -altr /etc/update-motd.d/
