@@ -48,7 +48,7 @@ check_if_docker_installed () {
 add_docker_repo () {
   curl -fsSL https://download.${pkg_simple}.com/linux/ubuntu/gpg | apt-key add -
   echo -e "\nCreating ${package} repo file.\n"
-  echo -e "deb [arch=amd64] https://download.${pkg_simple}.com/linux/ubuntu $system_rel stable"  > /etc/apt/sources.list.d/${package}.list
+  echo -e "deb [arch=amd64] https://download.${pkg_simple}.com/linux/ubuntu $system_rel stable" | sudo tee -a /etc/apt/sources.list.d/${package}.list
   DEBIAN_FRONTEND=non-interactive apt-get update
 }
 
