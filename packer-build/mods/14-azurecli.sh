@@ -49,7 +49,7 @@ add_azure-cli_repo () {
   echo -e "\nAdding Microsoft Key!"
   curl -sL $ms_key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null
   echo -e "\nAdding Azure Repo to apt list!"
-  echo -e "deb [arch=amd64] ${azure_repo} ${system_rel} main" > /etc/apt/sources.list.d/${package}.list
+  echo -e "deb [arch=amd64] ${azure_repo} ${system_rel} main" | sudo tee -a /etc/apt/sources.list.d/${package}.list
   DEBIAN_FRONTEND=non-interactive apt-get update
 }
 
