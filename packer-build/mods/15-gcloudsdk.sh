@@ -30,8 +30,9 @@ check_if_google-cloud-sdk_installed () {
 }
 
 add_google-cloud-sdk_repo () {
-  echo -e "\nAdding ${package} repo to apt list!"
-  echo -e "deb http://packages.cloud.google.com/apt $sdk_rel main" > /etc/apt/sources.list.d/${package}.list
+  echo -e "\nAdding ${package} key and repo to apt list!"
+  curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+  echo -e "deb http://packages.cloud.google.com/apt ${sdk_rel} main" | sudo tee -a /etc/apt/sources.list.d/${package}.list
   DEBIAN_FRONTEND=non-interactive apt-get update
 }
 
