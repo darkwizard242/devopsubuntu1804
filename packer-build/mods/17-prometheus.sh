@@ -241,8 +241,12 @@ Type=simple
 ExecStart=${extract_path}/${package} \
     --config.file ${config_path}/${package}.yml \
     --storage.tsdb.path ${db_path}/ \
+    --storage.tsdb.no-lockfile \
+    --storage.tsdb.retention.time=30d \
     --web.console.templates=${config_path}/consoles \
-    --web.console.libraries=${config_path}/console_libraries
+    --web.console.libraries=${config_path}/console_libraries \
+    --web.page-title="Prometheus Server" \
+    --web.listen-address=0.0.0.0:9090
 
 [Install]
 WantedBy=multi-user.target
