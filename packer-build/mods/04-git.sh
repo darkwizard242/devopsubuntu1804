@@ -53,8 +53,8 @@ case "$1" in
     git_uninstaller
     ;;
   *)
-    echo -e $"\nUsage:\t $0 check\t\t : Checks if ${package1} is installed on the system."
-    echo -e $"Usage:\t $0 install\t\t : For installing ${package1} from the system."
-    echo -e $"Usage:\t $0 uninstall\t : For uninstalling/purging ${package1} from the system.\n"
+    echo -e $"\nUsage:\t $0 check\nChecks if ${package1} is installed on the system.\n\n"
+    echo -e $"Usage:\t $0 install\nFor installing ${package1} from the system.\n\n"
+    echo -e $"Usage:\t $0 uninstall\nFor uninstalling/purging ${package1} from the system.\n"
     exit 1
 esac
