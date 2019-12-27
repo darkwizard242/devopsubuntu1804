@@ -222,6 +222,16 @@ alertmanager_uninstaller () {
   fi
 }
 
+amtool_uninstaller () {
+  if command -v amtool &> /dev/null;
+    then
+      amtool_loc=$(command -v amtool)
+      rm -v ${amtool_loc}
+    else
+      echo -e "\nNO: amtool is NOT IN an installed state.\n"
+  fi
+}
+
 check_if_alertmanager_service_exists () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
@@ -400,6 +410,7 @@ case "$1" in
     remove_alertmanager_config_path
     remove_alertmanager_user
     alertmanager_uninstaller
+    amtool_uninstaller
     remove_alertmanager_service
     systemctl_daemon_reload
     ;;
