@@ -773,14 +773,14 @@ case "$1" in
     systemctl_daemon_reload
     ;;
   *)
-    echo -e $"\nUsage:\t $0 check\t : Checks if ${package} is installed on the system and operational."
-    echo -e $"Usage:\t $0 install\t : For installing ${package} on the system and setting up it's service."
-    echo -e $"Usage:\t $0 status\t : For checking ${package} service status on the system."
-    echo -e $"Usage:\t $0 enable\t : For enabling ${package} service on boot time of the system."
-    echo -e $"Usage:\t $0 disable\t : For disabling ${package} service on boot time of the system."
-    echo -e $"Usage:\t $0 start\t : For starting ${package} service on the system."
-    echo -e $"Usage:\t $0 restart\t : For restarting ${package} service on the system."
-    echo -e $"Usage:\t $0 stop\t : For stopping ${package} service on the system."
-    echo -e $"Usage:\t $0 uninstall\t : For uninstalling/purging ${package} and it's from the system.\n"
+    echo -e $"\nUsage:\t $0 check\nChecks if ${package} is installed on the system and operational.\n\n"
+    echo -e $"Usage:\t $0 install\nFor installing ${package} on the system and setting up it's service.\n\n"
+    echo -e $"Usage:\t $0 status\nFor checking ${package} service status on the system.\n\n"
+    echo -e $"Usage:\t $0 enable\nFor enabling ${package} service on boot time of the system.\n\n"
+    echo -e $"Usage:\t $0 disable\nFor disabling ${package} service on boot time of the system.\n\n"
+    echo -e $"Usage:\t $0 start\nFor starting ${package} service on the system.\n\n"
+    echo -e $"Usage:\t $0 restart\nFor restarting ${package} service on the system.\n\n"
+    echo -e $"Usage:\t $0 stop\nFor stopping ${package} service on the system.\n\n"
+    echo -e $"Usage:\t $0 uninstall\nFor uninstalling/purging ${package} and it's from the system.\n"
     exit 1
 esac
