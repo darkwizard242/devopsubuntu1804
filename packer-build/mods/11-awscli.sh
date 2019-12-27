@@ -74,9 +74,9 @@ case "$1" in
     awscli_uninstaller
     ;;
   *)
-    echo -e $"\nUsage:\t $0 check\t\t\t : Checks if ${package} is installed on the system."
-    echo -e $"Usage:\t $0 install\t\t : For installing ${package} from the system."
-    echo -e $"Usage:\t $0 upgrade\t\t : For upgrading pip3 from the system."
-    echo -e $"Usage:\t $0 uninstall\t\t : For uninstalling/purging ${package} from the system.\n"
+    echo -e $"\nUsage:\t $0 check\nChecks if ${package} is installed on the system.\n\n"
+    echo -e $"Usage:\t $0 install\nFor installing ${package} from the system.\n\n"
+    echo -e $"Usage:\t $0 upgrade\nFor upgrading pip3 from the system.\n\n"
+    echo -e $"Usage:\t $0 uninstall\nFor uninstalling/purging ${package} from the system.\n"
     exit 1
 esac
