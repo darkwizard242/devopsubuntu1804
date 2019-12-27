@@ -143,14 +143,14 @@ case "$1" in
     remove_docker_repo
     ;;
   *)
-    echo -e $"\nUsage:\t $0 check\t\t : Checks if ${pkg_simple} is installed on the system and operational."
-    echo -e $"Usage:\t $0 install\t\t : For installing ${package} from the system."
-    echo -e $"Usage:\t $0 status\t\t : For checking ${pkg_simple} service status on the system."
-    echo -e $"Usage:\t $0 enable\t\t : For enabling ${pkg_simple} service on boot time of the system."
-    echo -e $"Usage:\t $0 disable\t\t : For disabling ${pkg_simple} service on boot time of the system."
-    echo -e $"Usage:\t $0 start\t\t : For starting ${pkg_simple} service on the system."
-    echo -e $"Usage:\t $0 restart\t\t : For restarting ${pkg_simple} service on the system."
-    echo -e $"Usage:\t $0 stop\t\t : For stopping ${pkg_simple} service on the system."
-    echo -e $"Usage:\t $0 uninstall\t\t : For uninstalling/purging ${package}, ${supporting_packages} from the system.\n"
+    echo -e $"\nUsage:\t $0 check\nChecks if ${pkg_simple} is installed on the system and operational.\n\n"
+    echo -e $"Usage:\t $0 install\nFor installing ${package} from the system.\n\n"
+    echo -e $"Usage:\t $0 status\nFor checking ${pkg_simple} service status on the system.\n\n"
+    echo -e $"Usage:\t $0 enable\nFor enabling ${pkg_simple} service on boot time of the system.\n\n"
+    echo -e $"Usage:\t $0 disable\nFor disabling ${pkg_simple} service on boot time of the system.\n\n"
+    echo -e $"Usage:\t $0 start\nFor starting ${pkg_simple} service on the system.\n\n"
+    echo -e $"Usage:\t $0 restart\nFor restarting ${pkg_simple} service on the system.\n\n"
+    echo -e $"Usage:\t $0 stop\nFor stopping ${pkg_simple} service on the system.\n\n"
+    echo -e $"Usage:\t $0 uninstall\nFor uninstalling/purging ${package}, ${supporting_packages} from the system.\n"
     exit 1
 esac
