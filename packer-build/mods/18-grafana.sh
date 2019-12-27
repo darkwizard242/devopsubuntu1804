@@ -2,50 +2,92 @@
 
 # Shellcheck fixes for: SC2181, SC2086, SC2164
 
-## Installing packages required for Grafana
-dependencies="wget tar"
 
-for dependency in $dependencies;
-do
-  if dpkg -s "$dependency" &> /dev/null;
-    then
-      echo -e "\n$dependency is already available and installed within the system."
-    else
-      echo -e "About to install:\t$dependency.\n"
-      DEBIAN_FRONTEND=non-interactive apt-get install "$dependency" -y
-  fi
-done
+dependencies="wget apt-transport-https software-properties-common"
+package="grafana"
+config_path="/etc/${package}"
+db_path="/var/lib/${package}"
 
-
-## Download Grafana and extract binary to /usr/local/bin
-binary="grafana"
-version="6.5.2"
-osarch="linux-amd64"
-if [ -e /opt/grafana/bin/grafana-server ]
-then
-  echo -e "$binary currently exists in:\t/opt/grafana/bin\n"
-else
-  if id $binary &> /dev/null;
-    then
-      echo -e "\nThe user:\t$binary does exist.\n"
-    else
-      echo -e "The user:\t$binary does not exist. Creating user:\t$binary\n"
-      useradd --no-create-home --shell /bin/false $binary
-  fi
-  echo -e "\nInstalling ${binary}!\n"
-  wget -v -O /tmp/${binary}.tar.gz https://dl.${binary}.com/oss/release/${binary}-${version}.${osarch}.tar.gz
-  if [ -d "/opt/$binary" ];
+check_os () {
+  if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
-    echo -e "\nDirectory:\t/opt/$binary exists. About to remove it.\n"
-    rm -rfv /opt/$binary
+    echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
+  elif [ "$(grep -Ei 'VERSION_ID="18.04"' /etc/os-release)" ];
+  then
+    echo -e "\nSystem OS is Ubuntu. Version is 18.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   else
-    echo -e "\nDirectory:\t/opt/$binary doesn't exist. Creating:\t/opt/$binary\n"
-    mkdir -pv /opt/$binary
+    echo -e "\nThis is neither Ubuntu 16.04 or Ubuntu 18.04.\n\n###\tScript execution HALTING!\t###\n"
+    exit 2
   fi
-  tar -xzf /tmp/${binary}.tar.gz -C /opt/$binary --strip-components=1
-  echo -e "\nRemoving:\t/tmp/${binary}.tar.gz" && rm -rv /tmp/${binary}.tar.gz
-  mkdir -pv /var/log/${binary} /var/lib/${binary}
-  cat <<EOF >/opt/${binary}/conf/${binary}.ini
+}
+
+setup_dependencies () {
+  for dependency in ${dependencies};
+  do
+    if dpkg -s "${dependency}" &> /dev/null;
+      then
+        echo -e "\n${dependency} is already available and installed within the system."
+      else
+        echo -e "About to install:\t${dependency}."
+        DEBIAN_FRONTEND=non-interactive apt-get install "${dependency}" -y
+    fi
+  done
+}
+
+add_grafana_user () {
+  if id ${package} &> /dev/null;
+    then
+      echo -e "\nThe user:\t${package}\tdoes exist. Nothing to create\n"
+    else
+      echo -e "\nThe user:\t${package}\tdoesn't exist. Creating user:\t${package}\t"
+      useradd -d /usr/share/${package} --shell /bin/false ${package}
+  fi
+}
+
+remove_grafana_user () {
+  if id ${package} &> /dev/null;
+    then
+      echo -e "\nThe user:\t${package}\tdoes exist. Removing user:\t${package}\t\n"
+      userdel -r ${package}
+    else
+      echo -e "\nThe user:\t${package}\tdoesn't exist. Nothing to remove."
+  fi
+}
+
+remove_grafana_config_path () {
+  if [ -d "${config_path}" ];
+    then
+      echo -e "\nRemoving  ${package} configuration directory:\t${config_path}\n"
+      rm -rfv ${config_path}
+    else
+      echo -e "\n${package} configuration directory:\t${config_path}\tdoes not exist.\n"
+  fi
+}
+
+remove_grafana_db_path () {
+  if [ -d "${db_path}" ];
+    then
+      echo -e "\nRemoving  ${package} database directory:\t${db_path}\n"
+      rm -rfv ${db_path}
+    else
+      echo -e "\n${package} database directory:\t${db_path}\tdoes not exist\n"
+  fi
+}
+
+check_if_grafana_installed () {
+  check_if_grafana_service_exists
+  check_if_grafana_service_running
+  if command -v ${package}-server &> /dev/null;
+    then
+      echo -e "\nYES: ${package} is IN an installed state within the system and executable binary is present at:\t$(command -v ${package})\n"
+      exit 0
+    else
+      echo -e "\nNO: ${package} is NOT IN an installed state.\n"
+  fi
+}
+
+grafana_config_file_template () {
+  cat <<EOF >${config_path}/${package}.ini
 ##################### Grafana Configuration Example #####################
 #
 # Everything has defaults so you only need to uncomment things you want to
@@ -58,7 +100,7 @@ instance_name = ${HOSTNAME}
 [paths]
 # Path to where grafana can store temp files, sessions, and the sqlite3 db (if that is used)
 data = /var/lib/grafana
-# Temporary files in `data` directory older than given duration will be removed
+# Temporary files in \`data\` directory older than given duration will be removed
 temp_data_lifetime = 24h
 # Directory where grafana can store logs
 logs = /var/log/grafana
@@ -82,7 +124,7 @@ enforce_domain = false
 # The full public facing url you use in browser, used for redirects and emails
 # If you use reverse proxy and sub path specify full url (with sub path)
 root_url = http://localhost:3000
-# Serve Grafana from subpath specified in `root_url` setting. By default it is set to `false` for compatibility reasons.
+# Serve Grafana from subpath specified in \`root_url\` setting. By default it is set to \`false\` for compatibility reasons.
 ;serve_from_sub_path = false
 # Log web requests
 router_logging = false
@@ -129,7 +171,7 @@ cache_mode = private
 type = database
 # cache connectionstring options
 # database: will use Grafana primary database.
-# redis: config like redis server e.g. `addr=127.0.0.1:6379,pool_size=100,db=0,ssl=false`. Only addr is required. ssl may be 'true', 'false', or 'insecure'.
+# redis: config like redis server e.g. \`addr=127.0.0.1:6379,pool_size=100,db=0,ssl=false\`. Only addr is required. ssl may be \'true\', \'false\', or \'insecure\'.
 # memcache: 127.0.0.1:11211
 ;connstr =
 #################################### Data proxy ###########################
@@ -164,7 +206,7 @@ disable_initial_admin_creation = false
 # default admin user, created on startup
 admin_user = admin
 # default admin password, can be changed before first start of grafana,  or in profile settings
-admin_password = admin
+admin_password = password
 # used for signing
 secret_key = SW2YcwTIb9zpOOhoPsMm
 # disable gravatar profile images
@@ -175,7 +217,7 @@ data_source_proxy_whitelist =
 disable_brute_force_login_protection = false
 # set to true if you host Grafana behind HTTPS. default is false.
 cookie_secure = false
-# set cookie SameSite attribute. defaults to `lax`. can be set to "lax", "strict" and "none"
+# set cookie SameSite attribute. defaults to \`lax\`. can be set to "lax", "strict" and "none"
 cookie_samesite = lax
 # set to true if you want to allow browsers to render Grafana in a <frame>, <iframe>, <embed> or <object>. default is false.
 allow_embedding = false
@@ -525,29 +567,220 @@ interval_seconds  = 10
 [plugins]
 ;enable_alpha = false
 ;app_tls_skip_verify_insecure = false
-EOF
-  chown -R ${binary}:${binary} /opt/${binary} /var/log/${binary} /var/lib/${binary}
-  echo -e "\nInstalled version is: $version"
-  cat <<EOF >/etc/systemd/system/${binary}.service
-[Unit]
-Description=Grafana - analytics platform for all your metrics.
-Wants=network-online.target
-After=network-online.target
 
-[Service]
-User=${binary}
-Group=${binary}
-WorkingDirectory=/opt/${binary}
-Type=simple
-ExecStart=/opt/${binary}/bin/${binary}-server -homepath /opt/${binary} -config /opt/${binary}/conf/${binary}.ini
-
-[Install]
-WantedBy=multi-user.target
 EOF
+}
+
+create_grafana_config_file () {
+  if [ -f "${config_path}/${package}.yml" ];
+    then
+      echo -e "\nRemoving pre-existing ${package} config file:\t${config_path}/${package}.yml\n"
+      rm -rfv ${config_path}/${package}.yml
+      echo -e "\nCreating ${package} config file:\t${config_path}/${package}.yml\n"
+      grafana_config_file_template
+    else
+      echo -e "\nCreating ${package} config file:\t${config_path}/${package}.yml\n"
+      grafana_config_file_template
+  fi
+}
+
+remove_grafana_config_file () {
+  if [ -f "${config_path}/${package}.yml" ];
+    then
+      echo -e "\nRemoving  ${package} config file:\t${config_path}/${package}.yml\n"
+      rm -rfv ${config_path}/${package}.yml
+    else
+      echo -e "\n${package} config file:\t${config_path}/${package}.yml\tdoes not exist.\n"
+  fi
+}
+
+
+add_grafana_repo () {
+  echo -e "\nAdding gpg key file for:\t${package}"
+  wget -q -O - https://packages.${package}.com/gpg.key | sudo apt-key add -
+  echo -e "\nAdding repository file for:\t${package}"
+  echo -e "deb https://packages.${package}.com/oss/deb stable main" | tee -a /etc/apt/sources.list.d/${package}.list
+  DEBIAN_FRONTEND=non-interactive apt-get update
+}
+
+remove_grafana_repo () {
+  rm -v /etc/apt/sources.list.d/${package}.list
+}
+
+grafana_installer () {
+  echo -e "\nPerforming installation for:\t${package}"
+  DEBIAN_FRONTEND=non-interactive sudo apt-get install -y ${package}
+}
+
+grafana_uninstaller () {
+  DEBIAN_FRONTEND=non-interactive sudo apt-get purge ${package} -y
+}
+
+check_if_grafana_service_exists () {
+  fragment_path=$(systemctl show -p FragmentPath ${package}-server | sed 's/^[^=]*=//g' || true)
+  if [[ -z "${fragment_path}" ]];
+  then
+    echo -e "\nNO: ${package}-server service does not exist on the system.\n"
+  else
+    echo -e "\nYES: ${package}-server service exists on the system. It exists at:\t${fragment_path}"
+  fi
+}
+
+check_if_grafana_service_running () {
+  fragment_path=$(systemctl show -p FragmentPath ${package}-server | sed 's/^[^=]*=//g' || true)
+  service_state=$(systemctl is-active ${package}-server  || true)
+  if [[ -z "${fragment_path}" ]];
+  then
+    echo -e "\nNO: ${package}-server service is not available.\n"
+  elif [[ "${service_state}" = "active" ]];
+  then
+    echo -e "\nYES: ${package}-server  service is in active running state."
+  else
+    echo -e "\nYES: ${package}-server  service is not in active running state."
+  fi
+}
+
+
+remove_grafana_service () {
+  fragment_path=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g' || true)
+  if [[ -z "${fragment_path}" ]];
+  then
+    echo -e "Service file for:\t${package}-server does not exist."
+  else
+    package_service_loc=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g')
+    rm -v ${package_service_loc}
+  fi
+}
+
+systemctl_daemon_reload () {
   echo -e "\nPerforming systemctl daemon reload."
   systemctl daemon-reload
-  echo -e "\nEnabling systemctl service for:\t${binary}"
-  systemctl enable ${binary}.service
-  echo -e "\nStarting systemctl service for:\t${binary}"
-  systemctl start ${binary}.service
-fi
+}
+
+grafana_service_status () {
+  fragment_path=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g' || true)
+  if [[ -z "${fragment_path}" ]];
+  then
+    echo -e "Service:\t${package}-server  does not exist."
+  else
+    systemctl status --no-pager -l ${package}-server
+  fi
+}
+
+grafana_service_enable () {
+  fragment_path=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g' || true)
+  if [[ -z "${fragment_path}" ]];
+  then
+    echo -e "Service:\t${package}-server  does not exist."
+  else
+    systemctl enable ${package}-server
+  fi
+}
+
+grafana_service_disable () {
+  fragment_path=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g' || true)
+  if [[ -z "${fragment_path}" ]];
+  then
+    echo -e "Service:\t${package}-server  does not exist."
+  else
+    systemctl disable ${package}-server
+  fi
+}
+
+grafana_service_start () {
+  fragment_path=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g' || true)
+  if [[ -z "${fragment_path}" ]];
+  then
+    echo -e "Service:\t${package}-server  does not exist."
+  else
+    systemctl start ${package}-server
+  fi
+}
+
+grafana_service_restart () {
+  fragment_path=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g' || true)
+  if [[ -z "${fragment_path}" ]];
+  then
+    echo -e "Service:\t${package}-server  does not exist."
+  else
+    systemctl restart ${package}-server
+  fi
+}
+
+grafana_service_stop () {
+  fragment_path=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g' || true)
+  if [[ -z "${fragment_path}" ]];
+  then
+    echo -e "Service:\t${package}-server  does not exist."
+  else
+    systemctl stop ${package}-server
+  fi
+}
+
+case "$1" in
+  check)
+    check_os
+    check_if_grafana_installed
+    ;;
+  install)
+    check_os
+    setup_dependencies
+    check_if_grafana_installed
+    echo -e "\nInstallation beginning for:\t${package}\n"
+    add_grafana_user
+    add_grafana_repo
+    grafana_installer
+    create_grafana_config_file
+    systemctl_daemon_reload
+    grafana_service_enable
+    grafana_service_restart
+    ;;
+  status)
+    check_os
+    grafana_service_status
+    ;;
+  enable)
+    check_os
+    grafana_service_enable
+    ;;
+  disable)
+    check_os
+    grafana_service_disable
+    ;;
+  start)
+    check_os
+    grafana_service_start
+    ;;
+  restart)
+    check_os
+    grafana_service_restart
+    ;;
+  stop)
+    check_os
+    grafana_service_stop
+    ;;
+  uninstall)
+    check_os
+    grafana_service_stop
+    echo -e "\nPurging beginning for:\t${package}\n"
+    grafana_uninstaller
+    remove_grafana_repo
+    remove_grafana_user
+    remove_grafana_config_file
+    remove_grafana_config_path
+    remove_grafana_db_path
+    remove_grafana_service
+    systemctl_daemon_reload
+    ;;
+  *)
+    echo -e $"\nUsage:\t $0 check\t : Checks if ${package} is installed on the system and operational."
+    echo -e $"Usage:\t $0 install\t : For installing ${package} on the system and setting up it's service."
+    echo -e $"Usage:\t $0 status\t : For checking ${package} service status on the system."
+    echo -e $"Usage:\t $0 enable\t : For enabling ${package} service on boot time of the system."
+    echo -e $"Usage:\t $0 disable\t : For disabling ${package} service on boot time of the system."
+    echo -e $"Usage:\t $0 start\t : For starting ${package} service on the system."
+    echo -e $"Usage:\t $0 restart\t : For restarting ${package} service on the system."
+    echo -e $"Usage:\t $0 stop\t : For stopping ${package} service on the system."
+    echo -e $"Usage:\t $0 uninstall\t : For uninstalling/purging ${package} and it's from the system.\n"
+    exit 1
+esac
