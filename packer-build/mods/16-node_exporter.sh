@@ -7,6 +7,8 @@ package="node_exporter"
 version="0.18.1"
 osarch="linux-amd64"
 extract_path="/usr/local/bin"
+log_config_path="/etc/rsyslog.d"
+log_out="/var/log/${package}.log"
 
 
 check_os () {
@@ -52,6 +54,39 @@ remove_node_exporter_user () {
       userdel -r ${package}
     else
       echo -e "\nThe user:\t${package}\tdoesn't exist. Nothing to remove."
+  fi
+}
+
+node_exporter_log_config_template () {
+  cat <<EOF >${log_config_path}/${package}.conf
+if ( \$programname startswith "${package}" ) then {
+    action(type="omfile" file="${log_out}" flushOnTXEnd="off" asyncWriting="on")
+    stop
+}
+
+EOF
+}
+
+create_node_exporter_log_config () {
+  if [ -f "${log_config_path}/${package}.conf" ];
+    then
+      echo -e "\nRemoving pre-existing ${package} rsyslog config file:\t${log_config_path}/${package}.conf\n"
+      rm -rfv ${log_config_path}/${package}.conf
+      echo -e "\nCreating ${package} rsyslog config file:\t${log_config_path}/${package}.conf\n"
+      node_exporter_log_config_template
+    else
+      echo -e "\nCreating ${package} rsyslog config file:\t${log_config_path}/${package}.conf\n"
+      node_exporter_log_config_template
+  fi
+}
+
+remove_node_exporter_log_config () {
+  if [ -f "${log_config_path}/${package}.conf" ];
+    then
+      echo -e "\nRemoving ${package} rsyslog config file:\t${log_config_path}/${package}.conf\n"
+      rm -rfv ${log_config_path}/${package}.conf
+    else
+      echo -e "\n${package} rsyslog config file:\t${log_config_path}/${package}.conf\tdoes not exist.\n"
   fi
 }
 
@@ -132,6 +167,9 @@ User=${package}
 Group=${package}
 Type=simple
 ExecStart=${extract_path}/${package} --collector.systemd --collector.processes --collector.mountstats
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=${package}
 
 [Install]
 WantedBy=multi-user.target
@@ -225,6 +263,7 @@ case "$1" in
     check_if_node_exporter_installed
     echo -e "\nInstallation beginning for:\t${package}\n"
     add_node_exporter_user
+    create_node_exporter_log_config && systemctl restart rsyslog.service
     node_exporter_installer
     add_node_exporter_service
     systemctl_daemon_reload
@@ -258,6 +297,7 @@ case "$1" in
   uninstall)
     check_os
     node_exporter_service_stop
+    remove_node_exporter_log_config && systemctl restart rsyslog.service
     echo -e "\nPurging beginning for:\t${package}\n"
     remove_node_exporter_user
     node_exporter_uninstaller
