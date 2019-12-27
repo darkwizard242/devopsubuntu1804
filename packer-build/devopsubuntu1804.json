@@ -80,6 +80,7 @@
                 "/home/vagrant/mods/16-node_exporter.sh install",
                 "/home/vagrant/mods/17-prometheus.sh install",
                 "/home/vagrant/mods/18-grafana.sh install",
+                "/home/vagrant/mods/19-alertmanager.sh install",
                 "/home/vagrant/mods/26-inspec.sh install",
                 "/home/vagrant/mods/27-trivy.sh install",
                 "/home/vagrant/mods/28-serverspec.sh install"
@@ -94,7 +95,6 @@
             "type": "shell",
             "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
             "scripts": [
-                "mods/19-install_alertmanager.sh",
                 "mods/20-install_aws-vault.sh",
                 "mods/21-install_hugo.sh",
                 "mods/22-install_gogs.sh",
