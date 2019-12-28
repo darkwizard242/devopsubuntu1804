@@ -86,6 +86,7 @@
                 "/home/vagrant/mods/22-gogs.sh install",
                 "/home/vagrant/mods/23-go.sh install",
                 "/home/vagrant/mods/24-osquery.sh install",
+                "/home/vagrant/mods/25-packer.sh install",
                 "/home/vagrant/mods/26-inspec.sh install",
                 "/home/vagrant/mods/27-trivy.sh install",
                 "/home/vagrant/mods/28-serverspec.sh install"
@@ -95,13 +96,6 @@
              "type": "inspec",
              "profile": "https://github.com/darkwizard242/inspec-git",
              "user": "vagrant"
-        },
-        {
-            "type": "shell",
-            "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-            "scripts": [
-                "mods/25-install_packer.sh"
-            ]
         },
         {
             "type": "file",
