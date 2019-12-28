@@ -85,6 +85,7 @@
                 "/home/vagrant/mods/21-hugo.sh install",
                 "/home/vagrant/mods/22-gogs.sh install",
                 "/home/vagrant/mods/23-go.sh install",
+                "/home/vagrant/mods/24-osquery.sh install",
                 "/home/vagrant/mods/26-inspec.sh install",
                 "/home/vagrant/mods/27-trivy.sh install",
                 "/home/vagrant/mods/28-serverspec.sh install"
@@ -99,7 +100,6 @@
             "type": "shell",
             "execute_command": "echo 'password' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
             "scripts": [
-                "mods/24-install_osquery.sh",
                 "mods/25-install_packer.sh"
             ]
         },
