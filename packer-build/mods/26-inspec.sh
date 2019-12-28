@@ -63,7 +63,7 @@ inspec_installer () {
 }
 
 inspec_uninstaller () {
-  DEBIAN_FRONTEND=non-interactive dpkg --purge ${package} -y
+  DEBIAN_FRONTEND=non-interactive dpkg --purge ${package}
 }
 
 
