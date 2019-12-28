@@ -4,7 +4,7 @@
 
 dependencies="wget"
 package="inspec"
-version="4.18.39"
+version="4.18.51"
 
 check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
@@ -85,8 +85,8 @@ case "$1" in
     inspec_uninstaller
     ;;
   *)
-    echo -e $"\nUsage:\t $0 check\t\t : Checks if ${package} is installed on the system."
-    echo -e $"Usage:\t $0 install\t\t : For installing ${package} from the system."
-    echo -e $"Usage:\t $0 uninstall\t : For uninstalling/purging ${package} from the system.\n"
+    echo -e $"\nUsage:\t $0 check\nChecks if ${package} is installed on the system.\n\n"
+    echo -e $"Usage:\t $0 install\nFor installing ${package} from the system.\n\n"
+    echo -e $"Usage:\t $0 uninstall\nFor uninstalling/purging ${package} from the system.\n"
     exit 1
 esac
