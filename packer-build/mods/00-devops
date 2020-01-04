@@ -55,7 +55,7 @@ pip3_ver=$(python3 -m pip --version | awk '{ print $2 }')
 ruby_ver=$(ruby --version | awk '{ print $2 }')
 git_ver=$(git --version | awk '{ print $3 }')
 svn_ver=$(svn --version | awk 'NR==1 { print $3,$4 }')
-grafanaserver_ver=$(/opt/grafana/bin/grafana-server -v | awk 'NR==1{print $2}')
+grafanaserver_ver=$(/usr/sbin/grafana-server -v | awk 'NR==1{print $2}')
 
 echo -e "\n\t $bold$underline DevOps Toolstack: $normal \n"
 echo -e "$lightred Jenkins Version:\t $lightgreen$jenkins_ver"
