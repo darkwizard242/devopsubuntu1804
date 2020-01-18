@@ -89,7 +89,8 @@
                 "/home/vagrant/mods/25-packer.sh install",
                 "/home/vagrant/mods/26-inspec.sh install",
                 "/home/vagrant/mods/27-trivy.sh install",
-                "/home/vagrant/mods/28-serverspec.sh install"
+                "/home/vagrant/mods/28-serverspec.sh install",
+                "/home/vagrant/mods/29-scout.sh install"
             ]
         },
         {
