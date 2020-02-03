@@ -2,6 +2,7 @@
 
 # Shellcheck fixes for: SC2181
 
+dependencies="curl apt-transport-https lsb-release gnupg"
 sdk_rel="cloud-sdk-$(lsb_release -cs)"
 package="google-cloud-sdk"
 
@@ -19,6 +20,19 @@ check_os () {
   fi
 }
 
+setup_dependencies () {
+  for dependency in ${dependencies};
+  do
+    if dpkg -s "${dependency}" &> /dev/null;
+      then
+        echo -e "\n${dependency} is already available and installed within the system."
+      else
+        echo -e "About to install:\t${dependency}."
+        DEBIAN_FRONTEND=non-interactive apt-get install "${dependency}" -y
+    fi
+  done
+}
+
 check_if_google-cloud-sdk_installed () {
   if gcloud --version &> /dev/null;
     then
@@ -32,7 +46,7 @@ check_if_google-cloud-sdk_installed () {
 add_google-cloud-sdk_repo () {
   echo -e "\nAdding ${package} key and repo to apt list!"
   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-  echo -e "deb http://packages.cloud.google.com/apt ${sdk_rel} main" | sudo tee -a /etc/apt/sources.list.d/${package}.list
+  echo -e "deb https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/${package}.list
   DEBIAN_FRONTEND=non-interactive apt-get update
 }
 
@@ -65,6 +79,7 @@ case "$1" in
     ;;
   install)
     check_os
+    setup_dependencies
     check_if_google-cloud-sdk_installed
     echo -e "\nInstallation beginning for:\t${package}\n"
     add_google-cloud-sdk_repo
