@@ -4,7 +4,7 @@
 
 dependencies="wget unzip"
 package="terraform"
-version="0.12.18"
+version="0.12.24"
 osarch="linux_amd64"
 extract_path="/usr/local/bin"
 
