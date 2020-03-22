@@ -3,7 +3,7 @@
 
 dependencies="wget unzip"
 package="packer"
-version="1.5.1"
+version="1.5.4"
 osarch="linux_amd64"
 extract_path="/usr/local/bin"
 
