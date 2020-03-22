@@ -6,7 +6,7 @@ dependencies="curl wget jq"
 package="osquery"
 packageinteractive="osqueryi"
 packageservice="osqueryd"
-version="4.1.2"
+version="4.2.0"
 osarch="linux.amd64"
 pathtointeractivepackage="/usr/bin/${packageinteractive}"
 
