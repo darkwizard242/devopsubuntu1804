@@ -3,7 +3,7 @@
 # Shellcheck fixes for: SC2181, SC2006, SC2140
 
 dependencies="curl"
-version="5.0.1"
+version="5.3.2"
 osarch="linux-amd64"
 package="aws-vault"
 extract_path="/usr/local/bin"
