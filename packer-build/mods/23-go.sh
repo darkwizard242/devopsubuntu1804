@@ -2,7 +2,7 @@
 
 dependencies="wget git"
 package="go"
-version="1.13.5"
+version="1.14.1"
 osarch="linux-amd64"
 extract_path="/usr/local"
 
