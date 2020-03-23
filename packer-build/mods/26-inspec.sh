@@ -4,7 +4,7 @@
 
 dependencies="wget"
 package="inspec"
-version="4.18.101"
+version="4.18.100"
 
 check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
