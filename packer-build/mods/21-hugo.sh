@@ -4,7 +4,7 @@
 
 dependencies="wget tar"
 package="hugo"
-version="0.68.1"
+version="0.68.3"
 osarch="Linux-64bit"
 extract_path="/usr/local/bin"
 
