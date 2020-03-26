@@ -45,7 +45,7 @@ check_if_hugo_installed () {
 }
 
 hugo_downloader () {
-  wget -v -O /tmp/${package}.tar.gz https://github.com/gohugoio/${package}/releases/download/v${version}/${package}_${version}_${osarch}.tar.gz &> /dev/null
+  wget -v -O /tmp/${package}.tar.gz https://github.com/gohugoio/${package}/releases/download/v${version}/${package}_extended_${version}_${osarch}.tar.gz &> /dev/null
 }
 
 hugo_extractor () {
