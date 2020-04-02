@@ -2,7 +2,7 @@ require 'spec_helper'
 
 if os[:family] == 'ubuntu'
   if os[:release] == '18.04'
-    describe service('grafana') do
+    describe service('grafana-server') do
       it { should be_enabled }
       it { should be_running.under('systemd') }
     end
@@ -29,18 +29,18 @@ end
 
 if os[:family] == 'ubuntu'
   if os[:release] == '18.04'
-    describe file('/opt/grafana/bin/grafana-server') do
+    describe file('/usr/sbin/grafana-server') do
       it { should be_file }
-      it { should be_owned_by 'grafana' }
+      it { should be_owned_by 'root' }
     end
   end
 end
 
 if os[:family] == 'ubuntu'
   if os[:release] == '18.04'
-    describe file('/opt/grafana') do
+    describe file('/etc/grafana') do
       it { should be_directory }
-      it { should be_owned_by 'grafana' }
+      it { should be_owned_by 'root' }
     end
   end
 end
@@ -65,13 +65,12 @@ end
 
 if os[:family] == 'ubuntu'
   if os[:release] == '18.04'
-    describe file('/opt/grafana/conf/grafana.ini') do
+    describe file('/etc/grafana/grafana.ini') do
       it { should be_file }
-      it { should be_owned_by 'grafana' }
+      it { should be_owned_by 'root' }
       it { should contain 'data = /var/lib/grafana' }
       it { should contain 'logs = /var/log/grafana' }
-      it { should contain 'plugins = /opt/grafana/plugins' }
-      it { should contain 'provisioning = /opt/grafana/conf/provisioning' }
+      it { should contain 'provisioning = /etc/grafana/provisioning' }
     end
   end
 end
