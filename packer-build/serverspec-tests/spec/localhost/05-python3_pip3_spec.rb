@@ -29,7 +29,7 @@ if os[:family] == 'ubuntu'
     describe package('python3-pip') do
       it { should be_installed }
     end
-    describe file('/usr/local/bin/pip3') do
+    describe file('/usr/bin/pip3') do
       it { should exist }
       it { should be_file }
       it { should be_executable }
@@ -39,7 +39,7 @@ if os[:family] == 'ubuntu'
     end
     describe command('which pip3') do
       its(:exit_status) { should eq 0 }
-      its(:stdout) { should match /\/usr\/local\/bin\/pip3/ }
+      its(:stdout) { should match /\/usr\/bin\/pip3/ }
     end
   end
 end
