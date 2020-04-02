@@ -57,7 +57,7 @@ end
 
 if os[:family] == 'ubuntu'
   if os[:release] == '18.04'
-    describe file('/etc/apt/sources.list.d/docker.list') do
+    describe file('/etc/apt/sources.list.d/docker-ce.list') do
       it { should exist }
       it { should be_file }
       it { should be_readable }
