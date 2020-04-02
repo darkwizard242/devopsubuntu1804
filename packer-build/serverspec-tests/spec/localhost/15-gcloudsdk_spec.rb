@@ -9,7 +9,7 @@ if os[:family] == 'ubuntu'
       it { should be_readable }
       it { should be_writable.by_user('root') }
       it { should be_mode 644 }
-      its(:content) { should match /deb\ http\:\/\/packages\.cloud\.google\.com\/apt\ cloud\-sdk\-bionic\ main/ }
+      its(:content) { should match /deb\ https\:\/\/packages\.cloud\.google\.com\/apt\ cloud\-sdk\ main/ }
     end
     describe package('google-cloud-sdk') do
       it { should be_installed }
