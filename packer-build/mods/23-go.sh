@@ -5,6 +5,7 @@ package="go"
 version="1.14.1"
 osarch="linux-amd64"
 extract_path="/usr/local"
+export_template_path="/etc/profile.d"
 
 check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
@@ -32,12 +33,36 @@ setup_dependencies () {
   done
 }
 
+go_export_template () {
+  cat <<EOF >${export_template_path}/${package}.sh
+# System-wide export for GO
+export PATH=$PATH:/usr/local/go/bin
+}
+EOF
+chmod 0644 -v ${export_template_path}/${package}.sh
+}
+
 add_go_profile_export () {
-  echo -e "\nexport PATH=\$PATH:${extract_path}/${package}/bin" >> /etc/profile
+  if [ -f "${export_template_path}/${package}.sh" ];
+    then
+      echo -e "\nRemoving pre-existing ${package} system-wide export file:\t${export_template_path}/${package}.sh\n"
+
+      echo -e "\nCreating ${package} system-wide export file:\t${export_template_path}/${package}.sh\n"
+      go_export_template
+    else
+      echo -e "\nCreating ${package} system-wide export file:\t${export_template_path}/${package}.sh\n"
+      go_export_template
+  fi
 }
 
 remove_go_profile_export () {
-  sed -i 's/export\ PATH\=\$PATH\:\/usr\/local\/go\/bin//g' /etc/profile
+  if [ -f "${export_template_path}/${package}.sh" ];
+    then
+      echo -e "\nRemoving ${package} system-wide export file:\t${export_template_path}/${package}.sh\n"
+      rm -rfv ${export_template_path}/${package}.sh
+    else
+      echo -e "\n${package} system-wide export file:\t${export_template_path}/${package}.sh\tdoes not exist.\n"
+  fi
 }
 
 go_installer () {
