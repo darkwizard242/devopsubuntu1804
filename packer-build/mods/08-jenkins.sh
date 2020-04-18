@@ -26,7 +26,7 @@ check_if_jenkins_installed () {
 }
 
 add_jenkins_repo () {
-  wget -q -O - https://pkg.${package}.io/debian/${package}.io.key | sudo apt-key add -
+  wget -q -O - https://pkg.${package}.io/debian-stable/${package}.io.key | sudo apt-key add -
   echo "deb http://pkg.${package}.io/debian-stable binary/" | sudo tee -a /etc/apt/sources.list.d/${package}.list
   DEBIAN_FRONTEND=non-interactive apt-get update
 }
