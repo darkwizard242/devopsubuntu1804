@@ -1,5 +1,20 @@
 require 'spec_helper'
 
+
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
+    describe file('/etc/apt/sources.list.d/grafana.list') do
+      it { should exist }
+      it { should be_file }
+      it { should be_readable }
+      it { should be_writable.by_user('root') }
+      it { should be_mode 644 }
+      its(:content) { should match /deb\ https\:\/\/packages\.grafana\.com\/oss\/deb\ stable\ main/ }
+    end
+  end
+end
+
+
 if os[:family] == 'ubuntu'
   if os[:release] == '18.04'
     describe service('grafana-server') do
