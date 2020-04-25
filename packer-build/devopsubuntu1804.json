@@ -92,7 +92,8 @@
                 "/home/vagrant/mods/28-serverspec.sh install",
                 "/home/vagrant/mods/29-scout.sh install",
                 "/home/vagrant/mods/30-awless.sh install",
-                "/home/vagrant/mods/31-docker-compose.sh install"
+                "/home/vagrant/mods/31-docker-compose.sh install",
+                "/home/vagrant/mods/32-jq.sh install"
             ]
         },
         {
