@@ -13,20 +13,23 @@ config_path="${pathtopackage}/custom/conf"
 pathtopackagerepos="${pathtopackage}/repositories"
 
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   elif [ "$(grep -Ei 'VERSION_ID="18.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 18.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
+  elif [ "$(grep -Ei 'VERSION_ID="20.04"' /etc/os-release)" ];
+  then
+    echo -e "\nSystem OS is Ubuntu. Version is 20.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   else
-    echo -e "\nThis is neither Ubuntu 16.04 or Ubuntu 18.04.\n\n###\tScript execution HALTING!\t###\n"
+    echo -e "\nThis is neither Ubuntu 16.04, Ubuntu 18.04 or Ubuntu 20.04.\n\n###\tScript execution HALTING!\t###\n"
     exit 2
   fi
 }
 
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -39,7 +42,7 @@ setup_dependencies () {
   done
 }
 
-add_gogs_user () {
+function add_gogs_user () {
   if id ${package} &> /dev/null;
     then
       echo -e "\nThe user:\t${package}\tdoes exist. Nothing to create\n"
@@ -49,7 +52,7 @@ add_gogs_user () {
   fi
 }
 
-remove_gogs_user () {
+function remove_gogs_user () {
   if id ${package} &> /dev/null;
     then
       echo -e "\nThe user:\t${package}\tdoes exist. Removing user:\t${package}\t\n"
@@ -59,7 +62,7 @@ remove_gogs_user () {
   fi
 }
 
-create_gogs_package_path () {
+function create_gogs_package_path () {
   if [ -d "${pathtopackage}" ];
     then
       echo -e "\nRemoving pre-existing ${package} home directory:\t${pathtopackage}\n"
@@ -72,7 +75,7 @@ create_gogs_package_path () {
   fi
 }
 
-remove_gogs_package_path () {
+function remove_gogs_package_path () {
   if [ -d "${pathtopackage}" ];
     then
       echo -e "\nRemoving  ${package} home directory:\t${pathtopackage}\n"
@@ -82,7 +85,7 @@ remove_gogs_package_path () {
   fi
 }
 
-create_gogs_repo_path () {
+function create_gogs_repo_path () {
   if [ -d "${pathtopackagerepos}" ];
     then
       echo -e "\nRemoving pre-existing ${package} repositories directory:\t${pathtopackagerepos}\n"
@@ -95,7 +98,7 @@ create_gogs_repo_path () {
   fi
 }
 
-remove_gogs_repo_path () {
+function remove_gogs_repo_path () {
   if [ -d "${pathtopackagerepos}" ];
     then
       echo -e "\nRemoving  ${package} repositories directory:\t${pathtopackagerepos}\n"
@@ -105,7 +108,7 @@ remove_gogs_repo_path () {
   fi
 }
 
-create_gogs_config_path () {
+function create_gogs_config_path () {
   if [ -d "${config_path}" ];
     then
       echo -e "\nRemoving pre-existing ${package} configuration directory:\t${config_path}\n"
@@ -118,7 +121,7 @@ create_gogs_config_path () {
   fi
 }
 
-remove_gogs_config_path () {
+function remove_gogs_config_path () {
   if [ -d "${config_path}" ];
     then
       echo -e "\nRemoving  ${package} configuration directory:\t${config_path}\n"
@@ -128,7 +131,7 @@ remove_gogs_config_path () {
   fi
 }
 
-check_if_gogs_installed () {
+function check_if_gogs_installed () {
   check_if_gogs_service_exists
   check_if_gogs_service_running
 }
@@ -189,7 +192,7 @@ SECRET_KEY   = JPOSWwnjJZ8wmgo
 EOF
 }
 
-create_gogs_config_file () {
+function create_gogs_config_file () {
   if [ -f "${config_path}/app.ini" ];
     then
       echo -e "\nRemoving pre-existing ${package} config file:\t${config_path}/app.ini\n"
@@ -202,7 +205,7 @@ create_gogs_config_file () {
   fi
 }
 
-remove_gogs_config_file () {
+function remove_gogs_config_file () {
   if [ -f "${config_path}/${package}.ini" ];
     then
       echo -e "\nRemoving  ${package} config file:\t${config_path}/${package}.ini\n"
@@ -212,7 +215,7 @@ remove_gogs_config_file () {
   fi
 }
 
-gogs_installer () {
+function gogs_installer () {
   echo -e "\nDownloading ${package} ....."
   wget -v -O /tmp/${package}.tar.gz https://dl.${package}.io/${version}/${package}_${version}_${osarch}.tar.gz  &> /dev/null
   echo -e "\nExtracting: /tmp/${package}.tar.gz \t to:\t${pathtopackage}"
@@ -224,7 +227,7 @@ gogs_installer () {
   chmod -v 0755 ${pathtopackage}/${package}
 }
 
-check_if_gogs_service_exists () {
+function check_if_gogs_service_exists () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -234,7 +237,7 @@ check_if_gogs_service_exists () {
   fi
 }
 
-check_if_gogs_service_running () {
+function check_if_gogs_service_running () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   service_state=$(systemctl is-active ${package} || true)
   if [[ -z "${fragment_path}" ]];
@@ -248,7 +251,7 @@ check_if_gogs_service_running () {
   fi
 }
 
-add_gogs_service () {
+function add_gogs_service () {
   echo -e "\nCreating service for:\t${package}"
   cat <<EOF >/etc/systemd/system/${package}.service
 [Unit]
@@ -283,7 +286,7 @@ WantedBy=multi-user.target
 EOF
 }
 
-remove_gogs_service () {
+function remove_gogs_service () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -294,12 +297,12 @@ remove_gogs_service () {
   fi
 }
 
-systemctl_daemon_reload () {
+function systemctl_daemon_reload () {
   echo -e "\nPerforming systemctl daemon reload."
   systemctl daemon-reload
 }
 
-gogs_service_status () {
+function gogs_service_status () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -309,7 +312,7 @@ gogs_service_status () {
   fi
 }
 
-gogs_service_enable () {
+function gogs_service_enable () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -319,7 +322,7 @@ gogs_service_enable () {
   fi
 }
 
-gogs_service_disable () {
+function gogs_service_disable () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -329,7 +332,7 @@ gogs_service_disable () {
   fi
 }
 
-gogs_service_start () {
+function gogs_service_start () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -339,7 +342,7 @@ gogs_service_start () {
   fi
 }
 
-gogs_service_restart () {
+function gogs_service_restart () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -349,7 +352,7 @@ gogs_service_restart () {
   fi
 }
 
-gogs_service_stop () {
+function gogs_service_stop () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
