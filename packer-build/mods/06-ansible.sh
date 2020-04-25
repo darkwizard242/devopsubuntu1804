@@ -4,7 +4,7 @@
 dependencies="software-properties-common python3 python3-pip"
 package1="ansible"
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
@@ -17,7 +17,7 @@ check_os () {
   fi
 }
 
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -30,7 +30,7 @@ setup_dependencies () {
   done
 }
 
-check_if_ansible_installed () {
+function check_if_ansible_installed () {
   if ${package1} --version &> /dev/null;
     then
       echo -e "\nYES: ${package1} is IN an installed state within the system.\n"
@@ -41,21 +41,21 @@ check_if_ansible_installed () {
   fi
 }
 
-add_ansible_repo () {
+function add_ansible_repo () {
   apt-add-repository ppa:${package1}/${package1} -y
   DEBIAN_FRONTEND=non-interactive apt-get update
 }
 
-ansible_installer () {
+function ansible_installer () {
   DEBIAN_FRONTEND=non-interactive apt-get install ${package1} -y
 }
 
-ansible_uninstaller () {
+function ansible_uninstaller () {
   DEBIAN_FRONTEND=non-interactive apt-get purge ${package1} -y
 }
 
-ansible_verify () {
-  if ${package1} localhost -m shell -a "hostname";
+function ansible_verify () {
+  if ${package1} localhost -m shell -a "hostname" &> /dev/null;
     then
       echo -e "\nExit status for ${package1} command returned back with a successful exit code.\n"
     else
