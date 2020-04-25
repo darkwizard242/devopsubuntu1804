@@ -7,20 +7,23 @@ osarch="linux-amd64"
 extract_path="/usr/local"
 export_template_path="/etc/profile.d"
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   elif [ "$(grep -Ei 'VERSION_ID="18.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 18.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
+  elif [ "$(grep -Ei 'VERSION_ID="20.04"' /etc/os-release)" ];
+  then
+    echo -e "\nSystem OS is Ubuntu. Version is 20.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   else
-    echo -e "\nThis is neither Ubuntu 16.04 or Ubuntu 18.04.\n\n###\tScript execution HALTING!\t###\n"
+    echo -e "\nThis is neither Ubuntu 16.04, Ubuntu 18.04 or Ubuntu 20.04.\n\n###\tScript execution HALTING!\t###\n"
     exit 2
   fi
 }
 
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -33,16 +36,15 @@ setup_dependencies () {
   done
 }
 
-go_export_template () {
+function go_export_template () {
   cat <<EOF >${export_template_path}/${package}.sh
 # System-wide export for GO
 export PATH=$PATH:/usr/local/go/bin
-}
 EOF
 chmod 0644 -v ${export_template_path}/${package}.sh
 }
 
-add_go_profile_export () {
+function add_go_profile_export () {
   if [ -f "${export_template_path}/${package}.sh" ];
     then
       echo -e "\nRemoving pre-existing ${package} system-wide export file:\t${export_template_path}/${package}.sh\n"
@@ -55,7 +57,7 @@ add_go_profile_export () {
   fi
 }
 
-remove_go_profile_export () {
+function remove_go_profile_export () {
   if [ -f "${export_template_path}/${package}.sh" ];
     then
       echo -e "\nRemoving ${package} system-wide export file:\t${export_template_path}/${package}.sh\n"
@@ -65,13 +67,13 @@ remove_go_profile_export () {
   fi
 }
 
-go_installer () {
+function go_installer () {
   wget -v -O /tmp/${package}.tar.gz https://dl.google.com/${package}/${package}${version}.${osarch}.tar.gz &> /dev/null
   tar -xzf /tmp/${package}.tar.gz -C ${extract_path}  && rm -rv /tmp/${package}.tar.gz
   chmod -v 0755 ${extract_path}/${package}
 }
 
-go_uninstaller () {
+function go_uninstaller () {
   rm -rf ${extract_path}/${package}
 }
 
