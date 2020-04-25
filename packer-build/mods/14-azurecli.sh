@@ -9,7 +9,7 @@ azure_repo="https://packages.microsoft.com/repos/azure-cli"
 package="azure-cli"
 
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
@@ -22,7 +22,7 @@ check_os () {
   fi
 }
 
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -35,7 +35,7 @@ setup_dependencies () {
   done
 }
 
-check_if_azure-cli_installed () {
+function check_if_azure-cli_installed () {
   if az --version &> /dev/null;
     then
       echo -e "\nYES: ${package} is IN an installed state within the system.\n"
@@ -45,7 +45,7 @@ check_if_azure-cli_installed () {
   fi
 }
 
-add_azure-cli_repo () {
+function add_azure-cli_repo () {
   echo -e "\nAdding Microsoft Key!"
   curl -sL $ms_key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null
   echo -e "\nAdding Azure Repo to apt list!"
@@ -53,19 +53,19 @@ add_azure-cli_repo () {
   DEBIAN_FRONTEND=non-interactive apt-get update
 }
 
-azure-cli_installer () {
+function azure-cli_installer () {
   DEBIAN_FRONTEND=non-interactive apt-get install ${package} -y
 }
 
-azure-cli_uninstaller () {
+function azure-cli_uninstaller () {
   DEBIAN_FRONTEND=non-interactive apt-get purge ${package} -y
 }
 
-remove_azure-cli_repo () {
+function remove_azure-cli_repo () {
   rm -v /etc/apt/sources.list.d/${package}.list
 }
 
-azure-cli_verify () {
+function azure-cli_verify () {
   if az --help &> /dev/null;
     then
       echo -e "\nExit status for ${package} command returned back with a successful exit code.\n"
