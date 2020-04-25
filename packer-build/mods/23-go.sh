@@ -2,7 +2,7 @@
 
 dependencies="wget git"
 package="go"
-version="1.14.1"
+version="1.14.2"
 osarch="linux-amd64"
 extract_path="/usr/local"
 export_template_path="/etc/profile.d"
