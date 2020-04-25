@@ -3,7 +3,7 @@
 # Shellcheck fixes for: SC2181, SC2006, SC2140
 
 dependencies="curl"
-version="1.25.4"
+version="1.25.5"
 osarch="$(uname -s)-$(uname -m)"
 package="docker-compose"
 extract_path="/usr/local/bin"
