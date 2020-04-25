@@ -245,6 +245,7 @@ case "$1" in
     osquery_installer
     systemctl_daemon_reload
     osquery_service_enable
+    osquery_service_start
     ;;
   status)
     check_os
