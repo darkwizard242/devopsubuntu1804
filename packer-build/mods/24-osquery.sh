@@ -6,12 +6,12 @@ dependencies="curl wget jq"
 package="osquery"
 packageinteractive="osqueryi"
 packageservice="osqueryd"
-version="4.2.0"
+version="4.3.0"
 osarch="linux.amd64"
 pathtointeractivepackage="/usr/bin/${packageinteractive}"
 
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
@@ -25,7 +25,7 @@ check_os () {
 }
 
 
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -38,7 +38,7 @@ setup_dependencies () {
   done
 }
 
-check_if_osquery_service_exists () {
+function check_if_osquery_service_exists () {
   fragment_path=$(systemctl show -p FragmentPath ${packageservice} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -48,7 +48,7 @@ check_if_osquery_service_exists () {
   fi
 }
 
-check_if_osquery_service_running () {
+function check_if_osquery_service_running () {
   fragment_path=$(systemctl show -p FragmentPath ${packageservice} | sed 's/^[^=]*=//g' || true)
   service_state=$(systemctl is-active ${packageservice} || true)
   if [[ -z "${fragment_path}" ]];
@@ -62,7 +62,7 @@ check_if_osquery_service_running () {
   fi
 }
 
-check_if_osquery_installed () {
+function check_if_osquery_installed () {
   check_if_osquery_service_exists
   check_if_osquery_service_running
   if command -v ${packageinteractive} &> /dev/null;
@@ -74,11 +74,11 @@ check_if_osquery_installed () {
   fi
 }
 
-osquery_downloader () {
+function osquery_downloader () {
   wget -v -O /tmp/${package}.deb https://pkg.${package}.io/deb/${package}_${version}_1.${osarch}.deb &> /dev/null
 }
 
-osquery_installer () {
+function osquery_installer () {
   dpkg -i /tmp/${package}.deb
   echo -e "\nRemoving the .deb file for ${package}."
   rm -v /tmp/${package}.deb
@@ -86,7 +86,7 @@ osquery_installer () {
   cp -v /usr/share/${package}/${package}.example.conf /etc/${package}/${package}.conf
 }
 
-osquery_uninstaller () {
+function osquery_uninstaller () {
   if dpkg -l | grep ${package} &> /dev/null;
   then
     DEBIAN_FRONTEND=non-interactive dpkg --purge ${package}
@@ -106,7 +106,7 @@ osquery_uninstaller () {
   done
 }
 
-remove_osquery_service () {
+function remove_osquery_service () {
   fragment_path=$(systemctl show -p FragmentPath ${packageservice} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -118,7 +118,7 @@ remove_osquery_service () {
 }
 
 
-osquery_usage_examples () {
+function osquery_usage_examples () {
   cat << EOF
 ## SAMPLE SQL queries for osqueryi - DEBIAN/UBUNTU system based
 
@@ -167,12 +167,12 @@ EOF
 }
 
 
-systemctl_daemon_reload () {
+function systemctl_daemon_reload () {
   echo -e "\nPerforming systemctl daemon reload."
   systemctl daemon-reload
 }
 
-osquery_service_status () {
+function osquery_service_status () {
   fragment_path=$(systemctl show -p FragmentPath ${packageservice} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -182,7 +182,7 @@ osquery_service_status () {
   fi
 }
 
-osquery_service_enable () {
+function osquery_service_enable () {
   fragment_path=$(systemctl show -p FragmentPath ${packageservice} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -192,7 +192,7 @@ osquery_service_enable () {
   fi
 }
 
-osquery_service_disable () {
+function osquery_service_disable () {
   fragment_path=$(systemctl show -p FragmentPath ${packageservice} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -202,7 +202,7 @@ osquery_service_disable () {
   fi
 }
 
-osquery_service_start () {
+function osquery_service_start () {
   fragment_path=$(systemctl show -p FragmentPath ${packageservice} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -212,7 +212,7 @@ osquery_service_start () {
   fi
 }
 
-osquery_service_restart () {
+function osquery_service_restart () {
   fragment_path=$(systemctl show -p FragmentPath ${packageservice} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -222,7 +222,7 @@ osquery_service_restart () {
   fi
 }
 
-osquery_service_stop () {
+function osquery_service_stop () {
   fragment_path=$(systemctl show -p FragmentPath ${packageservice} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
