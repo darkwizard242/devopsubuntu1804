@@ -5,20 +5,23 @@
 package1="ruby"
 package2="serverspec"
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   elif [ "$(grep -Ei 'VERSION_ID="18.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 18.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
+  elif [ "$(grep -Ei 'VERSION_ID="20.04"' /etc/os-release)" ];
+  then
+    echo -e "\nSystem OS is Ubuntu. Version is 20.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   else
-    echo -e "\nThis is neither Ubuntu 16.04 or Ubuntu 18.04.\n\n###\tScript execution HALTING!\t###\n"
+    echo -e "\nThis is neither Ubuntu 16.04, Ubuntu 18.04 or Ubuntu 20.04.\n\n###\tScript execution HALTING!\t###\n"
     exit 2
   fi
 }
 
-check_if_ruby_installed () {
+function check_if_ruby_installed () {
   if ${package1} --version &> /dev/null;
     then
       echo -e "\nYES: ${package1} is IN an installed state within the system. It is required to install ${package2}\n"
@@ -28,7 +31,7 @@ check_if_ruby_installed () {
   fi
 }
 
-check_if_serverspec_installed () {
+function check_if_serverspec_installed () {
   if which ${package2}-init &> /dev/null;
     then
       echo -e "\nYES: ${package2} is IN an installed state within the system.\n"
@@ -38,11 +41,11 @@ check_if_serverspec_installed () {
   fi
 }
 
-serverspec_installer () {
+function serverspec_installer () {
   gem install ${package2}
 }
 
-serverspec_uninstaller () {
+function serverspec_uninstaller () {
   gem uninstall ${package2} -x
 }
 
