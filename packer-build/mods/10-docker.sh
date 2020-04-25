@@ -8,7 +8,7 @@ supporting_packages="docker-ce-cli containerd.io"
 package="docker-ce"
 pkg_simple="docker"
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
@@ -21,7 +21,7 @@ check_os () {
   fi
 }
 
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -34,7 +34,7 @@ setup_dependencies () {
   done
 }
 
-check_if_docker_installed () {
+function check_if_docker_installed () {
   if ${pkg_simple} --version &> /dev/null;
     then
       echo -e "\nYES: ${package} is IN an installed state within the system.\n"
@@ -45,52 +45,52 @@ check_if_docker_installed () {
   fi
 }
 
-add_docker_repo () {
+function add_docker_repo () {
   curl -fsSL https://download.${pkg_simple}.com/linux/ubuntu/gpg | apt-key add -
   echo -e "\nCreating ${package} repo file.\n"
   echo -e "deb [arch=amd64] https://download.${pkg_simple}.com/linux/ubuntu $system_rel stable" | sudo tee -a /etc/apt/sources.list.d/${package}.list
   DEBIAN_FRONTEND=non-interactive apt-get update
 }
 
-docker_installer () {
+function docker_installer () {
   DEBIAN_FRONTEND=non-interactive apt-get install ${package} ${supporting_packages} -y
   ver_fresh=$(${pkg_simple} --version)
   echo -e "\nInstalled ${package} version is: ${ver_fresh}"
 }
 
-remove_docker_repo () {
+function remove_docker_repo () {
   rm -v /etc/apt/sources.list.d/${package}.list
 }
 
-docker_uninstaller () {
+function docker_uninstaller () {
   DEBIAN_FRONTEND=non-interactive apt-get purge ${package} ${supporting_packages} -y
 }
 
-docker_verify () {
+function docker_verify () {
   ${pkg_simple} ps &> /dev/null
 }
 
-docker_service_status () {
+function docker_service_status () {
   systemctl status --no-pager -l ${pkg_simple}
 }
 
-docker_service_enable () {
+function docker_service_enable () {
   systemctl enable ${pkg_simple}
 }
 
-docker_service_disable () {
+function docker_service_disable () {
   systemctl disable ${pkg_simple}
 }
 
-docker_service_start () {
+function docker_service_start () {
   systemctl start ${pkg_simple}
 }
 
-docker_service_restart () {
+function docker_service_restart () {
   systemctl restart ${pkg_simple}
 }
 
-docker_service_stop () {
+function docker_service_stop () {
   systemctl stop ${pkg_simple}
 }
 
