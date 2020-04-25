@@ -2,20 +2,23 @@
 
 package="jenkins"
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   elif [ "$(grep -Ei 'VERSION_ID="18.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 18.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
+  elif [ "$(grep -Ei 'VERSION_ID="20.04"' /etc/os-release)" ];
+  then
+    echo -e "\nSystem OS is Ubuntu. Version is 20.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   else
-    echo -e "\nThis is neither Ubuntu 16.04 or Ubuntu 18.04.\n\n###\tScript execution HALTING!\t###\n"
+    echo -e "\nThis is neither Ubuntu 16.04, Ubuntu 18.04 or Ubuntu 20.04.\n\n###\tScript execution HALTING!\t###\n"
     exit 2
   fi
 }
 
-check_if_jenkins_installed () {
+function check_if_jenkins_installed () {
   if dpkg -s ${package} &> /dev/null;
     then
       echo -e "\nYES: ${package} is IN an installed state within the system.\n"
@@ -25,45 +28,45 @@ check_if_jenkins_installed () {
   fi
 }
 
-add_jenkins_repo () {
+function add_jenkins_repo () {
   wget -q -O - https://pkg.${package}.io/debian-stable/${package}.io.key | sudo apt-key add -
   echo "deb http://pkg.${package}.io/debian-stable binary/" | sudo tee -a /etc/apt/sources.list.d/${package}.list
   DEBIAN_FRONTEND=non-interactive apt-get update
 }
 
-remove_jenkins_repo () {
+function remove_jenkins_repo () {
   rm -v /etc/apt/sources.list.d/${package}.list
 }
 
-jenkins_installer () {
+function jenkins_installer () {
   DEBIAN_FRONTEND=non-interactive apt-get install ${package} -y
 }
 
-jenkins_uninstaller () {
+function jenkins_uninstaller () {
   DEBIAN_FRONTEND=non-interactive apt-get purge ${package} -y
 }
 
-jenkins_service_status () {
+function jenkins_service_status () {
   systemctl status --no-pager -l ${package}
 }
 
-jenkins_service_enable () {
+function jenkins_service_enable () {
   systemctl enable ${package}
 }
 
-jenkins_service_disable () {
+function jenkins_service_disable () {
   systemctl disable ${package}
 }
 
-jenkins_service_start () {
+function jenkins_service_start () {
   systemctl start ${package}
 }
 
-jenkins_service_restart () {
+function jenkins_service_restart () {
   systemctl restart ${package}
 }
 
-jenkins_service_stop () {
+function jenkins_service_stop () {
   systemctl stop ${package}
 }
 
