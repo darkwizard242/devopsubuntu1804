@@ -8,21 +8,24 @@ version="0.7.2"
 osarch="linux-amd64"
 extract_path="/usr/local/bin"
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   elif [ "$(grep -Ei 'VERSION_ID="18.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 18.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
+  elif [ "$(grep -Ei 'VERSION_ID="20.04"' /etc/os-release)" ];
+  then
+    echo -e "\nSystem OS is Ubuntu. Version is 20.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   else
-    echo -e "\nThis is neither Ubuntu 16.04 or Ubuntu 18.04.\n\n###\tScript execution HALTING!\t###\n"
+    echo -e "\nThis is neither Ubuntu 16.04, Ubuntu 18.04 or Ubuntu 20.04.\n\n###\tScript execution HALTING!\t###\n"
     exit 2
   fi
 }
 
 ## Installing packages required for Terraform
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -35,7 +38,7 @@ setup_dependencies () {
   done
 }
 
-check_if_scout_installed () {
+function check_if_scout_installed () {
   if command -v ${package} &> /dev/null;
     then
       echo -e "\nYES: ${package} is IN an installed state within the system.\n"
@@ -45,13 +48,13 @@ check_if_scout_installed () {
   fi
 }
 
-scout_downloader () {
+function scout_downloader () {
   wget -v -O ${extract_path}/${package} https://github.com/liamg/${package}/releases/download/v${version}/${package}-${osarch} &> /dev/null \
   && chmod +x ${extract_path}/${package}
 }
 
 
-scout_removal () {
+function scout_removal () {
   rm -v ${extract_path}/${package}
 }
 
