@@ -3,25 +3,28 @@
 
 dependencies="wget unzip"
 package="packer"
-version="1.5.4"
+version="1.5.5"
 osarch="linux_amd64"
 extract_path="/usr/local/bin"
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   elif [ "$(grep -Ei 'VERSION_ID="18.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 18.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
+  elif [ "$(grep -Ei 'VERSION_ID="20.04"' /etc/os-release)" ];
+  then
+    echo -e "\nSystem OS is Ubuntu. Version is 20.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   else
-    echo -e "\nThis is neither Ubuntu 16.04 or Ubuntu 18.04.\n\n###\tScript execution HALTING!\t###\n"
+    echo -e "\nThis is neither Ubuntu 16.04, Ubuntu 18.04 or Ubuntu 20.04.\n\n###\tScript execution HALTING!\t###\n"
     exit 2
   fi
 }
 
 ## Installing packages required for Terraform
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -34,7 +37,7 @@ setup_dependencies () {
   done
 }
 
-check_if_packer_installed () {
+function check_if_packer_installed () {
   if ${package} --version &> /dev/null;
     then
       echo -e "\nYES: ${package} is IN an installed state within the system.\n"
@@ -44,17 +47,17 @@ check_if_packer_installed () {
   fi
 }
 
-packer_downloader () {
+function packer_downloader () {
   wget -v -O /tmp/${package}.zip https://releases.hashicorp.com/${package}/${version}/${package}_${version}_${osarch}.zip &> /dev/null
 }
 
-packer_extractor () {
+function packer_extractor () {
   unzip /tmp/${package}.zip -d ${extract_path}  &> /dev/null && rm -rv /tmp/${package}.zip
   ver_fresh=$(${package} --version)
   echo -e "\nInstalled ${package} version is: ${ver_fresh}"
 }
 
-packer_removal () {
+function packer_removal () {
   rm -v ${extract_path}/${package}
 }
 
