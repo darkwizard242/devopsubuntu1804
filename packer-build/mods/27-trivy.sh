@@ -4,20 +4,23 @@ dependencies="wget apt-transport-https gnupg lsb-release"
 system_rel=$(lsb_release -cs)
 package="trivy"
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   elif [ "$(grep -Ei 'VERSION_ID="18.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 18.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
+  elif [ "$(grep -Ei 'VERSION_ID="20.04"' /etc/os-release)" ];
+  then
+    echo -e "\nSystem OS is Ubuntu. Version is 20.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   else
-    echo -e "\nThis is neither Ubuntu 16.04 or Ubuntu 18.04.\n\n###\tScript execution HALTING!\t###\n"
+    echo -e "\nThis is neither Ubuntu 16.04, Ubuntu 18.04 or Ubuntu 20.04.\n\n###\tScript execution HALTING!\t###\n"
     exit 2
   fi
 }
 
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -30,7 +33,7 @@ setup_dependencies () {
   done
 }
 
-check_if_trivy_installed () {
+function check_if_trivy_installed () {
   if ${package} --version &> /dev/null;
     then
       echo -e "\nYES: ${package} is IN an installed state within the system.\n"
@@ -40,7 +43,7 @@ check_if_trivy_installed () {
   fi
 }
 
-add_trivy_repo () {
+function add_trivy_repo () {
   wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
   echo -e "\nCreating ${package} repo file.\n"
   echo -e "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main"  > /etc/apt/sources.list.d/${package}.list
@@ -48,15 +51,15 @@ add_trivy_repo () {
   DEBIAN_FRONTEND=non-interactive apt-get update
 }
 
-trivy_installer () {
+function trivy_installer () {
   DEBIAN_FRONTEND=non-interactive apt-get install ${package} -y
 }
 
-remove_trivy_repo () {
+function remove_trivy_repo () {
   rm -v /etc/apt/sources.list.d/${package}.list
 }
 
-trivy_uninstaller () {
+function trivy_uninstaller () {
   DEBIAN_FRONTEND=non-interactive apt-get purge ${package} -y
 }
 
