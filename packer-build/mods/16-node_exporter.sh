@@ -11,20 +11,23 @@ log_config_path="/etc/rsyslog.d"
 log_out="/var/log/${package}.log"
 
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   elif [ "$(grep -Ei 'VERSION_ID="18.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 18.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
+  elif [ "$(grep -Ei 'VERSION_ID="20.04"' /etc/os-release)" ];
+  then
+    echo -e "\nSystem OS is Ubuntu. Version is 20.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   else
-    echo -e "\nThis is neither Ubuntu 16.04 or Ubuntu 18.04.\n\n###\tScript execution HALTING!\t###\n"
+    echo -e "\nThis is neither Ubuntu 16.04, Ubuntu 18.04 or Ubuntu 20.04.\n\n###\tScript execution HALTING!\t###\n"
     exit 2
   fi
 }
 
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -37,7 +40,7 @@ setup_dependencies () {
   done
 }
 
-add_node_exporter_user () {
+function add_node_exporter_user () {
   if id ${package} &> /dev/null;
     then
       echo -e "\nThe user:\t${package}\tdoes exist. Nothing to create\n"
@@ -47,7 +50,7 @@ add_node_exporter_user () {
   fi
 }
 
-remove_node_exporter_user () {
+function remove_node_exporter_user () {
   if id ${package} &> /dev/null;
     then
       echo -e "\nThe user:\t${package}\tdoes exist. Removing user:\t${package}\t\n"
@@ -57,7 +60,7 @@ remove_node_exporter_user () {
   fi
 }
 
-node_exporter_log_config_template () {
+function node_exporter_log_config_template () {
   cat <<EOF >${log_config_path}/${package}.conf
 if ( \$programname startswith "${package}" ) then {
     action(type="omfile" file="${log_out}" flushOnTXEnd="off" asyncWriting="on")
@@ -67,7 +70,7 @@ if ( \$programname startswith "${package}" ) then {
 EOF
 }
 
-create_node_exporter_log_config () {
+function create_node_exporter_log_config () {
   if [ -f "${log_config_path}/${package}.conf" ];
     then
       echo -e "\nRemoving pre-existing ${package} rsyslog config file:\t${log_config_path}/${package}.conf\n"
@@ -80,7 +83,7 @@ create_node_exporter_log_config () {
   fi
 }
 
-remove_node_exporter_log_config () {
+function remove_node_exporter_log_config () {
   if [ -f "${log_config_path}/${package}.conf" ];
     then
       echo -e "\nRemoving ${package} rsyslog config file:\t${log_config_path}/${package}.conf\n"
@@ -90,7 +93,7 @@ remove_node_exporter_log_config () {
   fi
 }
 
-check_if_node_exporter_installed () {
+function check_if_node_exporter_installed () {
   check_if_node_exporter_service_exists
   check_if_node_exporter_service_running
   if command -v ${package} &> /dev/null;
@@ -102,7 +105,7 @@ check_if_node_exporter_installed () {
   fi
 }
 
-node_exporter_installer () {
+function node_exporter_installer () {
   echo -e "\nCreating temporary directory as workspace till installation is complete."
   mkdir -pv /tmp/${package}_tempdir
   wget -v -O /tmp/${package}.tar.gz https://github.com/prometheus/${package}/releases/download/v${version}/${package}-${version}.${osarch}.tar.gz  &> /dev/null
@@ -119,7 +122,7 @@ node_exporter_installer () {
   rm -rfv /tmp/${package}_tempdir
 }
 
-node_exporter_uninstaller () {
+function node_exporter_uninstaller () {
   if command -v ${package} &> /dev/null;
     then
       package_loc=$(command -v ${package})
@@ -130,7 +133,7 @@ node_exporter_uninstaller () {
   fi
 }
 
-check_if_node_exporter_service_exists () {
+function check_if_node_exporter_service_exists () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -140,7 +143,7 @@ check_if_node_exporter_service_exists () {
   fi
 }
 
-check_if_node_exporter_service_running () {
+function check_if_node_exporter_service_running () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   service_state=$(systemctl is-active ${package} || true)
   if [[ -z "${fragment_path}" ]];
@@ -154,7 +157,7 @@ check_if_node_exporter_service_running () {
   fi
 }
 
-add_node_exporter_service () {
+function add_node_exporter_service () {
   echo -e "\nCreating service for:\t${package}"
   cat <<EOF >/etc/systemd/system/${package}.service
 [Unit]
@@ -176,7 +179,7 @@ WantedBy=multi-user.target
 EOF
 }
 
-remove_node_exporter_service () {
+function remove_node_exporter_service () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -187,12 +190,12 @@ remove_node_exporter_service () {
   fi
 }
 
-systemctl_daemon_reload () {
+function systemctl_daemon_reload () {
   echo -e "\nPerforming systemctl daemon reload."
   systemctl daemon-reload
 }
 
-node_exporter_service_status () {
+function node_exporter_service_status () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -202,7 +205,7 @@ node_exporter_service_status () {
   fi
 }
 
-node_exporter_service_enable () {
+function node_exporter_service_enable () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -212,7 +215,7 @@ node_exporter_service_enable () {
   fi
 }
 
-node_exporter_service_disable () {
+function node_exporter_service_disable () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -222,7 +225,7 @@ node_exporter_service_disable () {
   fi
 }
 
-node_exporter_service_start () {
+function node_exporter_service_start () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -232,7 +235,7 @@ node_exporter_service_start () {
   fi
 }
 
-node_exporter_service_restart () {
+function node_exporter_service_restart () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -242,7 +245,7 @@ node_exporter_service_restart () {
   fi
 }
 
-node_exporter_service_stop () {
+function node_exporter_service_stop () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
