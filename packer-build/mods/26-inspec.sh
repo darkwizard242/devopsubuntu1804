@@ -4,9 +4,9 @@
 
 dependencies="wget"
 package="inspec"
-version="4.18.100"
+version="4.18.104"
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
@@ -20,7 +20,7 @@ check_os () {
 }
 
 
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -33,7 +33,7 @@ setup_dependencies () {
   done
 }
 
-check_if_inspec_installed () {
+function check_if_inspec_installed () {
   if inspec --version &> /dev/null;
     then
       echo -e "\nYES: ${package} is IN an installed state within the system.\n"
@@ -43,7 +43,7 @@ check_if_inspec_installed () {
   fi
 }
 
-inspec_downloader () {
+function inspec_downloader () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     wget -v -O /tmp/${package}_${version}-1_amd64.deb https://packages.chef.io/files/stable/${package}/${version}/ubuntu/16.04/${package}_${version}-1_amd64.deb &> /dev/null
@@ -56,13 +56,13 @@ inspec_downloader () {
   fi
 }
 
-inspec_installer () {
+function inspec_installer () {
   DEBIAN_FRONTEND=non-interactive dpkg -i /tmp/${package}_${version}-1_amd64.deb
   rm -v /tmp/${package}_${version}-1_amd64.deb
   inspec version --chef-license=accept
 }
 
-inspec_uninstaller () {
+function inspec_uninstaller () {
   DEBIAN_FRONTEND=non-interactive dpkg --purge ${package}
 }
 
