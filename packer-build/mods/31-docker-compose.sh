@@ -8,20 +8,23 @@ osarch="$(uname -s)-$(uname -m)"
 package="docker-compose"
 extract_path="/usr/local/bin"
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   elif [ "$(grep -Ei 'VERSION_ID="18.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 18.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
+  elif [ "$(grep -Ei 'VERSION_ID="20.04"' /etc/os-release)" ];
+  then
+    echo -e "\nSystem OS is Ubuntu. Version is 20.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   else
-    echo -e "\nThis is neither Ubuntu 16.04 or Ubuntu 18.04.\n\n###\tScript execution HALTING!\t###\n"
+    echo -e "\nThis is neither Ubuntu 16.04, Ubuntu 18.04 or Ubuntu 20.04.\n\n###\tScript execution HALTING!\t###\n"
     exit 2
   fi
 }
 
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -34,7 +37,7 @@ setup_dependencies () {
   done
 }
 
-check_if_docker-compose_installed () {
+function check_if_docker-compose_installed () {
   if command -v ${package} &> /dev/null;
     then
       echo -e "\nYES: ${package} is IN an installed state within the system.\n"
@@ -44,13 +47,13 @@ check_if_docker-compose_installed () {
   fi
 }
 
-docker-compose_installer () {
+function docker-compose_installer () {
   curl -L -o /${extract_path}/${package} https://github.com/docker/compose/releases/download/${version}/${package}-${osarch} &> /dev/null
   chmod -v 0755 ${extract_path}/${package}
   chown root:root ${extract_path}/${package}
 }
 
-docker-compose_uninstaller () {
+function docker-compose_uninstaller () {
   rm -v ${extract_path}/${package}
 }
 
