@@ -8,6 +8,12 @@ if os[:family] == 'ubuntu'
       it { should be_owned_by 'root' }
       it { should be_mode 755 }
     end
+  end
+end
+
+
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
     describe file('/usr/local/go/bin/go') do
       it { should exist }
       it { should be_file }
@@ -19,6 +25,12 @@ if os[:family] == 'ubuntu'
       it { should be_writable.by_user('root') }
       it { should be_mode 755 }
     end
+  end
+end
+
+
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
     describe file('/etc/profile.d/go.sh') do
       it { should exist }
       it { should be_file }
@@ -29,9 +41,21 @@ if os[:family] == 'ubuntu'
       it { should be_mode 644 }
       it { should contain 'export PATH=$PATH:/usr/local/go/bin' }
     end
+  end
+end
+
+
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
     describe command('go version') do
       its(:exit_status) { should eq 0 }
     end
+  end
+end
+
+
+if os[:family] == 'ubuntu'
+  if os[:release] == '18.04'
     describe command('which go') do
       its(:exit_status) { should eq 0 }
       its(:stdout) { should match /\/usr\/local\/go\/bin\/go/ }
