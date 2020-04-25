@@ -108,9 +108,9 @@ temp_data_lifetime = 24h
 # Directory where grafana can store logs
 logs = /var/log/grafana
 # Directory where grafana will automatically scan and look for plugins
-plugins = /opt/${binary}/plugins
+plugins = /opt/grafana/plugins
 # folder that contains provisioning config files that grafana will apply on startup and while running.
-provisioning = /opt/${binary}/conf/provisioning
+provisioning = /etc/grafana/provisioning
 #################################### Server ####################################
 [server]
 # Protocol (http, https, h2, socket)
