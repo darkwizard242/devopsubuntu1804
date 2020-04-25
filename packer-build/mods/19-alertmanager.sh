@@ -12,20 +12,23 @@ log_config_path="/etc/rsyslog.d"
 log_out="/var/log/${package}.log"
 
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   elif [ "$(grep -Ei 'VERSION_ID="18.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 18.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
+  elif [ "$(grep -Ei 'VERSION_ID="20.04"' /etc/os-release)" ];
+  then
+    echo -e "\nSystem OS is Ubuntu. Version is 20.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   else
-    echo -e "\nThis is neither Ubuntu 16.04 or Ubuntu 18.04.\n\n###\tScript execution HALTING!\t###\n"
+    echo -e "\nThis is neither Ubuntu 16.04, Ubuntu 18.04 or Ubuntu 20.04.\n\n###\tScript execution HALTING!\t###\n"
     exit 2
   fi
 }
 
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -38,7 +41,7 @@ setup_dependencies () {
   done
 }
 
-add_alertmanager_user () {
+function add_alertmanager_user () {
   if id ${package} &> /dev/null;
     then
       echo -e "\nThe user:\t${package}\tdoes exist. Nothing to create\n"
@@ -48,7 +51,7 @@ add_alertmanager_user () {
   fi
 }
 
-remove_alertmanager_user () {
+function remove_alertmanager_user () {
   if id ${package} &> /dev/null;
     then
       echo -e "\nThe user:\t${package}\tdoes exist. Removing user:\t${package}\t\n"
@@ -58,7 +61,7 @@ remove_alertmanager_user () {
   fi
 }
 
-alertmanager_log_config_template () {
+function alertmanager_log_config_template () {
   cat <<EOF >${log_config_path}/${package}.conf
 if ( \$programname startswith "${package}" ) then {
     action(type="omfile" file="${log_out}" flushOnTXEnd="off" asyncWriting="on")
@@ -68,7 +71,7 @@ if ( \$programname startswith "${package}" ) then {
 EOF
 }
 
-create_alertmanager_log_config () {
+function create_alertmanager_log_config () {
   if [ -f "${log_config_path}/${package}.conf" ];
     then
       echo -e "\nRemoving pre-existing ${package} rsyslog config file:\t${log_config_path}/${package}.conf\n"
@@ -81,7 +84,7 @@ create_alertmanager_log_config () {
   fi
 }
 
-remove_alertmanager_log_config () {
+function remove_alertmanager_log_config () {
   if [ -f "${log_config_path}/${package}.conf" ];
     then
       echo -e "\nRemoving ${package} rsyslog config file:\t${log_config_path}/${package}.conf\n"
@@ -91,7 +94,7 @@ remove_alertmanager_log_config () {
   fi
 }
 
-create_alertmanager_config_path () {
+function create_alertmanager_config_path () {
   if [ -d "${config_path}" ];
     then
       echo -e "\nRemoving pre-existing ${package} configuration directory:\t${config_path}.\n"
@@ -104,7 +107,7 @@ create_alertmanager_config_path () {
   fi
 }
 
-remove_alertmanager_config_path () {
+function remove_alertmanager_config_path () {
   if [ -d "${config_path}" ];
     then
       echo -e "\nRemoving  ${package} configuration directory:\t${config_path}\n"
@@ -115,7 +118,7 @@ remove_alertmanager_config_path () {
 }
 
 
-check_if_alertmanager_installed () {
+function check_if_alertmanager_installed () {
   check_if_alertmanager_service_exists
   check_if_alertmanager_service_running
   if command -v ${package} &> /dev/null;
@@ -127,7 +130,7 @@ check_if_alertmanager_installed () {
   fi
 }
 
-alertmanager_config_file_template () {
+function alertmanager_config_file_template () {
   cat <<EOF >${config_path}/${package}.yml
 global:
   resolve_timeout: 5m
@@ -169,7 +172,7 @@ inhibit_rules:
 EOF
 }
 
-create_alertmanager_config_file () {
+function create_alertmanager_config_file () {
   if [ -f "${config_path}/${package}.yml" ];
     then
       echo -e "\nRemoving pre-existing ${package} config file:\t${config_path}/${package}.yml\n"
@@ -182,7 +185,7 @@ create_alertmanager_config_file () {
   fi
 }
 
-remove_alertmanager_config_file () {
+function remove_alertmanager_config_file () {
   if [ -f "${config_path}/${package}.yml" ];
     then
       echo -e "\nRemoving  ${package} config file:\t${config_path}/${package}.yml\n"
@@ -192,7 +195,7 @@ remove_alertmanager_config_file () {
   fi
 }
 
-alertmanager_installer () {
+function alertmanager_installer () {
   echo -e "\nCreating temporary directory as workspace till installation is complete."
   mkdir -pv /tmp/${package}_tempdir
   wget -v -O /tmp/${package}.tar.gz https://github.com/prometheus/${package}/releases/download/v${version}/${package}-${version}.${osarch}.tar.gz  &> /dev/null
@@ -211,7 +214,7 @@ alertmanager_installer () {
   rm -rfv /tmp/${package}_tempdir
 }
 
-alertmanager_uninstaller () {
+function alertmanager_uninstaller () {
   if command -v ${package} &> /dev/null;
     then
       package_loc=$(command -v ${package})
@@ -222,7 +225,7 @@ alertmanager_uninstaller () {
   fi
 }
 
-amtool_uninstaller () {
+function amtool_uninstaller () {
   if command -v amtool &> /dev/null;
     then
       amtool_loc=$(command -v amtool)
@@ -232,7 +235,7 @@ amtool_uninstaller () {
   fi
 }
 
-check_if_alertmanager_service_exists () {
+function check_if_alertmanager_service_exists () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -242,7 +245,7 @@ check_if_alertmanager_service_exists () {
   fi
 }
 
-check_if_alertmanager_service_running () {
+function check_if_alertmanager_service_running () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   service_state=$(systemctl is-active ${package} || true)
   if [[ -z "${fragment_path}" ]];
@@ -256,7 +259,7 @@ check_if_alertmanager_service_running () {
   fi
 }
 
-add_alertmanager_service () {
+function add_alertmanager_service () {
   echo -e "\nCreating service for:\t${package}"
   cat <<EOF >/etc/systemd/system/${package}.service
 [Unit]
@@ -281,7 +284,7 @@ WantedBy=multi-user.target
 EOF
 }
 
-remove_alertmanager_service () {
+function remove_alertmanager_service () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -292,12 +295,12 @@ remove_alertmanager_service () {
   fi
 }
 
-systemctl_daemon_reload () {
+function systemctl_daemon_reload () {
   echo -e "\nPerforming systemctl daemon reload."
   systemctl daemon-reload
 }
 
-alertmanager_service_status () {
+function alertmanager_service_status () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -307,7 +310,7 @@ alertmanager_service_status () {
   fi
 }
 
-alertmanager_service_enable () {
+function alertmanager_service_enable () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -317,7 +320,7 @@ alertmanager_service_enable () {
   fi
 }
 
-alertmanager_service_disable () {
+function alertmanager_service_disable () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -327,7 +330,7 @@ alertmanager_service_disable () {
   fi
 }
 
-alertmanager_service_start () {
+function alertmanager_service_start () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -337,7 +340,7 @@ alertmanager_service_start () {
   fi
 }
 
-alertmanager_service_restart () {
+function alertmanager_service_restart () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -347,7 +350,7 @@ alertmanager_service_restart () {
   fi
 }
 
-alertmanager_service_stop () {
+function alertmanager_service_stop () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
