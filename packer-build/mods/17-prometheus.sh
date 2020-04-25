@@ -5,7 +5,7 @@
 
 dependencies="wget tar"
 package="prometheus"
-version="2.16.0"
+version="2.17.2"
 osarch="linux-amd64"
 extract_path="/usr/local/bin"
 config_path="/etc/${package}"
