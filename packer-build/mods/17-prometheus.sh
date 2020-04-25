@@ -14,20 +14,23 @@ log_config_path="/etc/rsyslog.d"
 log_out="/var/log/${package}.log"
 
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   elif [ "$(grep -Ei 'VERSION_ID="18.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 18.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
+  elif [ "$(grep -Ei 'VERSION_ID="20.04"' /etc/os-release)" ];
+  then
+    echo -e "\nSystem OS is Ubuntu. Version is 20.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   else
-    echo -e "\nThis is neither Ubuntu 16.04 or Ubuntu 18.04.\n\n###\tScript execution HALTING!\t###\n"
+    echo -e "\nThis is neither Ubuntu 16.04, Ubuntu 18.04 or Ubuntu 20.04.\n\n###\tScript execution HALTING!\t###\n"
     exit 2
   fi
 }
 
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -40,7 +43,7 @@ setup_dependencies () {
   done
 }
 
-add_prometheus_user () {
+function add_prometheus_user () {
   if id ${package} &> /dev/null;
     then
       echo -e "\nThe user:\t${package}\tdoes exist. Nothing to create\n"
@@ -50,7 +53,7 @@ add_prometheus_user () {
   fi
 }
 
-remove_prometheus_user () {
+function remove_prometheus_user () {
   if id ${package} &> /dev/null;
     then
       echo -e "\nThe user:\t${package}\tdoes exist. Removing user:\t${package}\t\n"
@@ -60,7 +63,7 @@ remove_prometheus_user () {
   fi
 }
 
-prometheus_log_config_template () {
+function prometheus_log_config_template () {
   cat <<EOF >${log_config_path}/${package}.conf
 if ( \$programname startswith "${package}" ) then {
     action(type="omfile" file="${log_out}" flushOnTXEnd="off" asyncWriting="on")
@@ -70,7 +73,7 @@ if ( \$programname startswith "${package}" ) then {
 EOF
 }
 
-create_prometheus_log_config () {
+function create_prometheus_log_config () {
   if [ -f "${log_config_path}/${package}.conf" ];
     then
       echo -e "\nRemoving pre-existing ${package} rsyslog config file:\t${log_config_path}/${package}.conf\n"
@@ -83,7 +86,7 @@ create_prometheus_log_config () {
   fi
 }
 
-remove_prometheus_log_config () {
+function remove_prometheus_log_config () {
   if [ -f "${log_config_path}/${package}.conf" ];
     then
       echo -e "\nRemoving ${package} rsyslog config file:\t${log_config_path}/${package}.conf\n"
@@ -93,7 +96,7 @@ remove_prometheus_log_config () {
   fi
 }
 
-create_prometheus_config_path () {
+function create_prometheus_config_path () {
   if [ -d "${config_path}" ];
     then
       echo -e "\nRemoving pre-existing ${package} configuration directory:\t${config_path}.\n"
@@ -106,7 +109,7 @@ create_prometheus_config_path () {
   fi
 }
 
-remove_prometheus_config_path () {
+function remove_prometheus_config_path () {
   if [ -d "${config_path}" ];
     then
       echo -e "\nRemoving  ${package} configuration directory:\t${config_path}\n"
@@ -116,7 +119,7 @@ remove_prometheus_config_path () {
   fi
 }
 
-create_prometheus_db_path () {
+function create_prometheus_db_path () {
   if [ -d "${db_path}" ];
     then
       echo -e "\nRemoving pre-existing ${package} database directory:\t${db_path}\n"
@@ -129,7 +132,7 @@ create_prometheus_db_path () {
   fi
 }
 
-remove_prometheus_db_path () {
+function remove_prometheus_db_path () {
   if [ -d "${db_path}" ];
     then
       echo -e "\nRemoving  ${package} database directory:\t${db_path}\n"
@@ -139,7 +142,7 @@ remove_prometheus_db_path () {
   fi
 }
 
-check_if_prometheus_installed () {
+function check_if_prometheus_installed () {
   check_if_prometheus_service_exists
   check_if_prometheus_service_running
   if command -v ${package} &> /dev/null;
@@ -151,7 +154,7 @@ check_if_prometheus_installed () {
   fi
 }
 
-prometheus_config_file_template () {
+function prometheus_config_file_template () {
   cat <<EOF >${config_path}/${package}.yml
 global:
   scrape_interval:     5s
@@ -180,7 +183,7 @@ scrape_configs:
 EOF
 }
 
-create_prometheus_config_file () {
+function create_prometheus_config_file () {
   if [ -f "${config_path}/${package}.yml" ];
     then
       echo -e "\nRemoving pre-existing ${package} config file:\t${config_path}/${package}.yml\n"
@@ -193,7 +196,7 @@ create_prometheus_config_file () {
   fi
 }
 
-remove_prometheus_config_file () {
+function remove_prometheus_config_file () {
   if [ -f "${config_path}/${package}.yml" ];
     then
       echo -e "\nRemoving  ${package} config file:\t${config_path}/${package}.yml\n"
@@ -203,7 +206,7 @@ remove_prometheus_config_file () {
   fi
 }
 
-prometheus_installer () {
+function prometheus_installer () {
   echo -e "\nCreating temporary directory as workspace till installation is complete."
   mkdir -pv /tmp/${package}_tempdir
   wget -v -O /tmp/${package}.tar.gz https://github.com/prometheus/${package}/releases/download/v${version}/${package}-${version}.${osarch}.tar.gz  &> /dev/null
@@ -226,7 +229,7 @@ prometheus_installer () {
   rm -rfv /tmp/${package}_tempdir
 }
 
-prometheus_uninstaller () {
+function prometheus_uninstaller () {
   if command -v ${package} &> /dev/null;
     then
       package_loc=$(command -v ${package})
@@ -237,7 +240,7 @@ prometheus_uninstaller () {
   fi
 }
 
-check_if_prometheus_service_exists () {
+function check_if_prometheus_service_exists () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -247,7 +250,7 @@ check_if_prometheus_service_exists () {
   fi
 }
 
-check_if_prometheus_service_running () {
+function check_if_prometheus_service_running () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   service_state=$(systemctl is-active ${package} || true)
   if [[ -z "${fragment_path}" ]];
@@ -261,7 +264,7 @@ check_if_prometheus_service_running () {
   fi
 }
 
-add_prometheus_service () {
+function add_prometheus_service () {
   echo -e "\nCreating service for:\t${package}"
   cat <<EOF >/etc/systemd/system/${package}.service
 [Unit]
@@ -292,7 +295,7 @@ WantedBy=multi-user.target
 EOF
 }
 
-remove_prometheus_service () {
+function remove_prometheus_service () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -303,12 +306,12 @@ remove_prometheus_service () {
   fi
 }
 
-systemctl_daemon_reload () {
+function systemctl_daemon_reload () {
   echo -e "\nPerforming systemctl daemon reload."
   systemctl daemon-reload
 }
 
-prometheus_service_status () {
+function prometheus_service_status () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -318,7 +321,7 @@ prometheus_service_status () {
   fi
 }
 
-prometheus_service_enable () {
+function prometheus_service_enable () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -328,7 +331,7 @@ prometheus_service_enable () {
   fi
 }
 
-prometheus_service_disable () {
+function prometheus_service_disable () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -338,7 +341,7 @@ prometheus_service_disable () {
   fi
 }
 
-prometheus_service_start () {
+function prometheus_service_start () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -348,7 +351,7 @@ prometheus_service_start () {
   fi
 }
 
-prometheus_service_restart () {
+function prometheus_service_restart () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -358,7 +361,7 @@ prometheus_service_restart () {
   fi
 }
 
-prometheus_service_stop () {
+function prometheus_service_stop () {
   fragment_path=$(systemctl show -p FragmentPath ${package} | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
