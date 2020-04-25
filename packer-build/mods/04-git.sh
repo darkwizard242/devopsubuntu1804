@@ -4,20 +4,23 @@
 
 package1="git"
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   elif [ "$(grep -Ei 'VERSION_ID="18.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 18.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
+  elif [ "$(grep -Ei 'VERSION_ID="20.04"' /etc/os-release)" ];
+  then
+    echo -e "\nSystem OS is Ubuntu. Version is 20.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   else
-    echo -e "\nThis is neither Ubuntu 16.04 or Ubuntu 18.04.\n\n###\tScript execution HALTING!\t###\n"
+    echo -e "\nThis is neither Ubuntu 16.04, Ubuntu 18.04 or Ubuntu 20.04.\n\n###\tScript execution HALTING!\t###\n"
     exit 2
   fi
 }
 
-check_if_git_installed () {
+function check_if_git_installed () {
   if git --version &> /dev/null;
     then
       echo -e "\nYES: ${package1} is IN an installed state within the system.\n"
@@ -27,11 +30,11 @@ check_if_git_installed () {
   fi
 }
 
-git_installer () {
+function git_installer () {
   DEBIAN_FRONTEND=non-interactive apt-get install ${package1} -y
 }
 
-git_uninstaller () {
+function git_uninstaller () {
   DEBIAN_FRONTEND=non-interactive apt-get purge ${package1} -y
 }
 
