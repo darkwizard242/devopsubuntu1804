@@ -8,20 +8,23 @@ package="grafana"
 config_path="/etc/${package}"
 db_path="/var/lib/${package}"
 
-check_os () {
+function check_os () {
   if [ "$(grep -Ei 'VERSION_ID="16.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 16.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   elif [ "$(grep -Ei 'VERSION_ID="18.04"' /etc/os-release)" ];
   then
     echo -e "\nSystem OS is Ubuntu. Version is 18.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
+  elif [ "$(grep -Ei 'VERSION_ID="20.04"' /etc/os-release)" ];
+  then
+    echo -e "\nSystem OS is Ubuntu. Version is 20.04.\n\n###\tProceeding with SCRIPT Execution\t###\n"
   else
-    echo -e "\nThis is neither Ubuntu 16.04 or Ubuntu 18.04.\n\n###\tScript execution HALTING!\t###\n"
+    echo -e "\nThis is neither Ubuntu 16.04, Ubuntu 18.04 or Ubuntu 20.04.\n\n###\tScript execution HALTING!\t###\n"
     exit 2
   fi
 }
 
-setup_dependencies () {
+function setup_dependencies () {
   for dependency in ${dependencies};
   do
     if dpkg -s "${dependency}" &> /dev/null;
@@ -34,7 +37,7 @@ setup_dependencies () {
   done
 }
 
-add_grafana_user () {
+function add_grafana_user () {
   if id ${package} &> /dev/null;
     then
       echo -e "\nThe user:\t${package}\tdoes exist. Nothing to create\n"
@@ -44,7 +47,7 @@ add_grafana_user () {
   fi
 }
 
-remove_grafana_user () {
+function remove_grafana_user () {
   if id ${package} &> /dev/null;
     then
       echo -e "\nThe user:\t${package}\tdoes exist. Removing user:\t${package}\t\n"
@@ -54,7 +57,7 @@ remove_grafana_user () {
   fi
 }
 
-remove_grafana_config_path () {
+function remove_grafana_config_path () {
   if [ -d "${config_path}" ];
     then
       echo -e "\nRemoving  ${package} configuration directory:\t${config_path}\n"
@@ -64,7 +67,7 @@ remove_grafana_config_path () {
   fi
 }
 
-remove_grafana_db_path () {
+function remove_grafana_db_path () {
   if [ -d "${db_path}" ];
     then
       echo -e "\nRemoving  ${package} database directory:\t${db_path}\n"
@@ -74,7 +77,7 @@ remove_grafana_db_path () {
   fi
 }
 
-check_if_grafana_installed () {
+function check_if_grafana_installed () {
   check_if_grafana_service_exists
   check_if_grafana_service_running
   if command -v ${package}-server &> /dev/null;
@@ -86,7 +89,7 @@ check_if_grafana_installed () {
   fi
 }
 
-grafana_config_file_template () {
+function grafana_config_file_template () {
   cat <<EOF >${config_path}/${package}.ini
 ##################### Grafana Configuration Example #####################
 #
@@ -571,7 +574,7 @@ interval_seconds  = 10
 EOF
 }
 
-create_grafana_config_file () {
+function create_grafana_config_file () {
   if [ -f "${config_path}/${package}.yml" ];
     then
       echo -e "\nRemoving pre-existing ${package} config file:\t${config_path}/${package}.yml\n"
@@ -584,7 +587,7 @@ create_grafana_config_file () {
   fi
 }
 
-remove_grafana_config_file () {
+function remove_grafana_config_file () {
   if [ -f "${config_path}/${package}.yml" ];
     then
       echo -e "\nRemoving  ${package} config file:\t${config_path}/${package}.yml\n"
@@ -595,7 +598,7 @@ remove_grafana_config_file () {
 }
 
 
-add_grafana_repo () {
+function add_grafana_repo () {
   echo -e "\nAdding gpg key file for:\t${package}"
   wget -q -O - https://packages.${package}.com/gpg.key | sudo apt-key add -
   echo -e "\nAdding repository file for:\t${package}"
@@ -603,20 +606,20 @@ add_grafana_repo () {
   DEBIAN_FRONTEND=non-interactive apt-get update
 }
 
-remove_grafana_repo () {
+function remove_grafana_repo () {
   rm -v /etc/apt/sources.list.d/${package}.list
 }
 
-grafana_installer () {
+function grafana_installer () {
   echo -e "\nPerforming installation for:\t${package}"
   DEBIAN_FRONTEND=non-interactive sudo apt-get install -y ${package}
 }
 
-grafana_uninstaller () {
+function grafana_uninstaller () {
   DEBIAN_FRONTEND=non-interactive sudo apt-get purge ${package} -y
 }
 
-check_if_grafana_service_exists () {
+function check_if_grafana_service_exists () {
   fragment_path=$(systemctl show -p FragmentPath ${package}-server | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -626,7 +629,7 @@ check_if_grafana_service_exists () {
   fi
 }
 
-check_if_grafana_service_running () {
+function check_if_grafana_service_running () {
   fragment_path=$(systemctl show -p FragmentPath ${package}-server | sed 's/^[^=]*=//g' || true)
   service_state=$(systemctl is-active ${package}-server  || true)
   if [[ -z "${fragment_path}" ]];
@@ -641,7 +644,7 @@ check_if_grafana_service_running () {
 }
 
 
-remove_grafana_service () {
+function remove_grafana_service () {
   fragment_path=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -652,12 +655,12 @@ remove_grafana_service () {
   fi
 }
 
-systemctl_daemon_reload () {
+function systemctl_daemon_reload () {
   echo -e "\nPerforming systemctl daemon reload."
   systemctl daemon-reload
 }
 
-grafana_service_status () {
+function grafana_service_status () {
   fragment_path=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -667,7 +670,7 @@ grafana_service_status () {
   fi
 }
 
-grafana_service_enable () {
+function grafana_service_enable () {
   fragment_path=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -677,7 +680,7 @@ grafana_service_enable () {
   fi
 }
 
-grafana_service_disable () {
+function grafana_service_disable () {
   fragment_path=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -687,7 +690,7 @@ grafana_service_disable () {
   fi
 }
 
-grafana_service_start () {
+function grafana_service_start () {
   fragment_path=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -697,7 +700,7 @@ grafana_service_start () {
   fi
 }
 
-grafana_service_restart () {
+function grafana_service_restart () {
   fragment_path=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
@@ -707,7 +710,7 @@ grafana_service_restart () {
   fi
 }
 
-grafana_service_stop () {
+function grafana_service_stop () {
   fragment_path=$(systemctl show -p FragmentPath ${package}-server  | sed 's/^[^=]*=//g' || true)
   if [[ -z "${fragment_path}" ]];
   then
